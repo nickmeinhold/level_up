@@ -22,3 +22,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/opening_screen.jpg
+    - assets/images/trial_workout.jpg
+    - assets/images/workout1.jpg
+    - assets/images/workout2.jpg

@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:level_up/free_workout/email_screen.dart';
-import 'package:level_up/free_workout/intro_screen.dart';
+import 'package:level_up/onboarding/free_workout/email_screen.dart';
+import 'package:level_up/onboarding/free_workout/intro_screen.dart';
 import 'package:level_up/main_screen.dart';
-import 'package:level_up/free_workout/name_screen.dart';
-import 'package:level_up/opening_screen.dart';
-import 'package:level_up/free_workout/terms_and_conditions_screen.dart';
+import 'package:level_up/onboarding/free_workout/name_screen.dart';
+import 'package:level_up/onboarding/opening_screen.dart';
+import 'package:level_up/onboarding/free_workout/terms_and_conditions_screen.dart';
+import 'package:level_up/utils/locator.dart';
+import 'package:level_up/workout/exercise_details_screen.dart';
+import 'package:level_up/workout/services/workouts_service.dart';
+import 'package:level_up/workout/workout_details_screen.dart';
 
 final _router = GoRouter(
   routes: [
-    GoRoute(path: '/', builder: (context, state) => OpeningScreen()),
+    GoRoute(path: '/', builder: (context, state) => MainScreen()),
     GoRoute(
       path: '/intro-screen',
       builder: (context, state) => const IntroScreen(),
@@ -24,9 +28,29 @@ final _router = GoRouter(
       builder: (context, state) => TermsAndConditionsScreen(),
     ),
     GoRoute(path: '/main-screen', builder: (context, state) => MainScreen()),
+    GoRoute(
+      name: 'workout-screen',
+      path: '/workout-screen/:workoutId',
+      builder:
+          (context, state) => WorkoutDetailsScreen(
+            workoutId: state.pathParameters['workoutId']!,
+          ),
+    ),
+    GoRoute(
+      name: 'exercise-screen',
+      path: '/exercise-screen/:exerciseId',
+      builder:
+          (context, state) => ExerciseDetailsScreen(
+            exerciseId: state.pathParameters['exerciseId']!,
+          ),
+    ),
   ],
 );
+
 void main() {
+  // The services make up the repositories layer of the "data layer architecture"
+  Locator.add<WorkoutsService>(WorkoutsService());
+
   runApp(const MainApp());
 }
 

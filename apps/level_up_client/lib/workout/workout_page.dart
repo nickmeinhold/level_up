@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:level_up/utils/locator.dart';
+import 'package:level_up/workout/models/workout.dart';
+import 'package:level_up/workout/services/workouts_service.dart';
 
 class WorkoutPage extends StatefulWidget {
   const WorkoutPage({super.key});
@@ -7,25 +11,46 @@ class WorkoutPage extends StatefulWidget {
   State<WorkoutPage> createState() => _WorkoutPageState();
 }
 
-class _WorkoutPageState extends State<WorkoutPage> {
-  final PageController _pageController = PageController();
+class _WorkoutPageState extends State<WorkoutPage>
+    with SingleTickerProviderStateMixin {
+  final PageController _pageController = PageController(viewportFraction: 0.8);
   int _currentPage = 0;
+  late TabController _tabController;
+  late List<Workout> _workouts;
 
-  final List<String> _images = [
-    'https://picsum.photos/id/1018/800/600',
-    'https://picsum.photos/id/1015/800/600',
-    'https://picsum.photos/id/1019/800/600',
-  ];
+  @override
+  void initState() {
+    super.initState();
+    _workouts = locate<WorkoutsService>().retrieveWorkouts();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorColor: Colors.white,
+          tabs: const [
+            Tab(icon: Icon(Icons.sports_basketball), text: 'Basketball'),
+            Tab(icon: Icon(Icons.electric_bolt), text: 'Performance'),
+            Tab(icon: Icon(Icons.add_moderator_outlined), text: 'Strength'),
+          ],
+        ),
+      ),
       body: Column(
         children: [
           Expanded(
             child: PageView.builder(
               controller: _pageController,
-              itemCount: _images.length,
+              itemCount: _workouts.length,
               onPageChanged: (int page) {
                 setState(() {
                   _currentPage = page;
@@ -36,18 +61,26 @@ class _WorkoutPageState extends State<WorkoutPage> {
                   padding: const EdgeInsets.all(8.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(16.0),
-                    child: Image.network(
-                      _images[index],
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(child: CircularProgressIndicator());
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return Center(
-                          child: Icon(Icons.error, size: 50, color: Colors.red),
+                    child: GestureDetector(
+                      onTap: () {
+                        context.pushNamed(
+                          'workout-screen',
+                          pathParameters: {'workoutId': _workouts[index].id},
                         );
                       },
+                      child: Image.asset(
+                        _workouts[index].image,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Center(
+                            child: Icon(
+                              Icons.error,
+                              size: 50,
+                              color: Colors.red,
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 );
@@ -58,7 +91,7 @@ class _WorkoutPageState extends State<WorkoutPage> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.generate(
-              _images.length,
+              _workouts.length,
               (index) => Container(
                 margin: EdgeInsets.symmetric(horizontal: 4.0),
                 width: 10.0,
