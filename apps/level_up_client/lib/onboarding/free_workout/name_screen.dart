@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:level_up/auth/auth_service.dart';
+import 'package:level_up/utils/locator.dart';
 
 class NameScreen extends StatefulWidget {
   const NameScreen({super.key});
@@ -50,6 +52,8 @@ class _NameScreenState extends State<NameScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   final text = _textController.text;
+
+                  locate<AuthService>().update(name: text);
 
                   context.push('/email-screen');
                 },

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up/utils/locator.dart';
-import 'package:level_up/workout/exercise_details_screen.dart';
-import 'package:level_up/workout/models/exercise.dart';
 import 'package:level_up/workout/models/workout.dart';
 import 'package:level_up/workout/services/workouts_service.dart';
 
@@ -95,9 +93,13 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
               type: StepperType.vertical,
               currentStep: _currentStep,
               onStepTapped: (step) {
+                _currentStep = step;
                 context.pushNamed(
                   'exercise-screen',
-                  pathParameters: {'exerciseId': '_exercises[index].id'},
+                  pathParameters: {
+                    'workoutId': widget.workoutId,
+                    'exerciseNum': '$_currentStep',
+                  },
                 );
                 // setState(() {
                 //   _currentStep = step;
@@ -120,7 +122,7 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
               controlsBuilder: (context, controls) {
                 return SizedBox(
                   height: 30,
-                  child: Expanded(child: LinearProgressIndicator(value: 0.0)),
+                  child: LinearProgressIndicator(value: 0.0),
                 );
               },
               steps: [

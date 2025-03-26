@@ -7,10 +7,12 @@ environment:
   sdk: ^3.7.0
 
 dependencies:
+  audioplayers: ^6.4.0
   flutter:
     sdk: flutter
   go_router: ^14.8.1
   url_launcher: ^6.3.1
+  vibration: ^3.1.3
   youtube_player_flutter: ^9.1.1
 
 dev_dependencies:
@@ -25,3 +27,4 @@ flutter:
     - assets/images/trial_workout.jpg
     - assets/images/workout1.jpg
     - assets/images/workout2.jpg
+    - assets/audio/alarm.mp3

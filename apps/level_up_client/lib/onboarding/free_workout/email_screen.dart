@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:level_up/auth/auth_service.dart';
+import 'package:level_up/utils/locator.dart';
 
 class EmailScreen extends StatefulWidget {
   const EmailScreen({super.key});
@@ -50,7 +52,7 @@ class _EmailScreenState extends State<EmailScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   final text = _textController.text;
-
+                  locate<AuthService>().update(email: text);
                   context.push('/terms-screen');
                 },
                 child: const Text('Next'),

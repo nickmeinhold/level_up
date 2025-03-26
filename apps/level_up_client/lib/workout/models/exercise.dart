@@ -22,10 +22,10 @@ class TimedExercise extends Exercise {
     required super.subtitle,
     required super.description,
     required this.time,
-    required this.rounds,
+    required this.sets,
   });
   final int time;
-  final int rounds;
+  final int sets;
 }
 
 class RepsExercise extends Exercise {
@@ -36,11 +36,11 @@ class RepsExercise extends Exercise {
     required super.subtitle,
     required super.description,
     required this.reps,
-    required this.rounds,
+    required this.sets,
   });
 
   final int reps;
-  final int rounds;
+  final int sets;
 }
 
 class RepsExerciseWithWeights extends RepsExercise {
@@ -51,7 +51,7 @@ class RepsExerciseWithWeights extends RepsExercise {
     required super.subtitle,
     required super.description,
     required super.reps,
-    required super.rounds,
+    required super.sets,
     required this.weight,
   });
 

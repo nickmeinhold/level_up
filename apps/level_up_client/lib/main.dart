@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:level_up/auth/auth_service.dart';
 import 'package:level_up/onboarding/free_workout/email_screen.dart';
 import 'package:level_up/onboarding/free_workout/intro_screen.dart';
 import 'package:level_up/main_screen.dart';
@@ -7,13 +8,14 @@ import 'package:level_up/onboarding/free_workout/name_screen.dart';
 import 'package:level_up/onboarding/opening_screen.dart';
 import 'package:level_up/onboarding/free_workout/terms_and_conditions_screen.dart';
 import 'package:level_up/utils/locator.dart';
-import 'package:level_up/workout/exercise_details_screen.dart';
+import 'package:level_up/workout/exercises/exercise_details_screen.dart';
+import 'package:level_up/workout/exercises/widgets/time_up_screen.dart';
 import 'package:level_up/workout/services/workouts_service.dart';
 import 'package:level_up/workout/workout_details_screen.dart';
 
 final _router = GoRouter(
   routes: [
-    GoRoute(path: '/', builder: (context, state) => MainScreen()),
+    GoRoute(path: '/', builder: (context, state) => OpeningScreen()),
     GoRoute(
       path: '/intro-screen',
       builder: (context, state) => const IntroScreen(),
@@ -38,17 +40,23 @@ final _router = GoRouter(
     ),
     GoRoute(
       name: 'exercise-screen',
-      path: '/exercise-screen/:exerciseId',
+      path: '/exercise-screen/:workoutId/:exerciseNum',
       builder:
           (context, state) => ExerciseDetailsScreen(
-            exerciseId: state.pathParameters['exerciseId']!,
+            workoutId: state.pathParameters['workoutId']!,
+            exerciseNum: state.pathParameters['exerciseNum']!,
           ),
+    ),
+    GoRoute(
+      path: '/time-up',
+      builder: (context, state) => const TimeUpScreen(),
     ),
   ],
 );
 
 void main() {
   // The services make up the repositories layer of the "data layer architecture"
+  Locator.add<AuthService>(AuthService());
   Locator.add<WorkoutsService>(WorkoutsService());
 
   runApp(const MainApp());
