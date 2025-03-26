@@ -65,6 +65,9 @@ class _TimedExerciseViewState extends State<TimedExerciseView> {
         if (choseRepeat!) {
           _numCompletedSets++;
         }
+        if (_numCompletedSets == _isChecked.length) {
+          context.pop();
+        }
         for (int i = 0; i < _isChecked.length; i++) {
           if (i < _numCompletedSets) {
             _isChecked[i] = true;
@@ -185,8 +188,15 @@ class _TimedExerciseViewState extends State<TimedExerciseView> {
                           value: _isChecked[index],
                           onChanged: (newValue) {
                             setState(() {
-                              _numCompletedSets = index;
                               _isChecked[index] = newValue!;
+
+                              if (newValue) {
+                                _numCompletedSets = index + 1;
+                              }
+
+                              if (_numCompletedSets == _isChecked.length) {
+                                context.pop();
+                              }
                             });
                           },
                         ),

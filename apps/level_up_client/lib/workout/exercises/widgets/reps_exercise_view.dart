@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:level_up/workout/models/exercise.dart';
 
 class RepsExerciseView extends StatefulWidget {
@@ -14,6 +15,7 @@ class _RepsExerciseViewState extends State<RepsExerciseView> {
   late final int _reps;
   late final int _sets;
   late final List<bool> _isChecked;
+  int _numCompletedSets = 0;
 
   @override
   void initState() {
@@ -144,6 +146,14 @@ class _RepsExerciseViewState extends State<RepsExerciseView> {
                           onChanged: (newValue) {
                             setState(() {
                               _isChecked[index] = newValue!;
+
+                              if (newValue) {
+                                _numCompletedSets = index + 1;
+                              }
+
+                              if (_numCompletedSets == _isChecked.length) {
+                                context.pop();
+                              }
                             });
                           },
                         ),
