@@ -19,6 +19,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
   uses-material-design: true
@@ -28,3 +29,11 @@ flutter:
     - assets/images/workout1.jpg
     - assets/images/workout2.jpg
     - assets/audio/alarm.mp3
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path_android: "assets/icons/android_icon.png"  # Android-specific
+  image_path_ios: "assets/icons/ios_icon.png"  
+  # min_sdk_android: 21  # Optional: set minimum Android SDK
+  # remove_alpha_ios: true  # Optional: removes transparency for iOS
