@@ -129,104 +129,15 @@ class _IntroScreenState extends State<IntroScreen> {
                 ),
               ],
             ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 30.0,
-                            right: 30.0,
-                          ),
-                          child: TextButton(
-                            onPressed: () {
-                              context.push('/name-screen');
-                            },
-                            style: ButtonStyle(
-                              padding: WidgetStateProperty.all<EdgeInsets>(
-                                EdgeInsets.all(15),
-                              ),
-                              foregroundColor: WidgetStateProperty.all<Color>(
-                                Colors.red,
-                              ),
-                              backgroundColor: WidgetStateProperty.all<Color>(
-                                Colors.white,
-                              ),
-                              shape: WidgetStateProperty.all<
-                                RoundedRectangleBorder
-                              >(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: BorderSide(color: Colors.red),
-                                ),
-                              ),
-                            ),
-                            child: Text('Try a free workout'),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 15),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 30.0, right: 10),
-                          child: Divider(),
-                        ),
-                      ),
-                      Text("OR"),
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 10.0, right: 30),
-                          child: Divider(),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 15),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                            left: 30.0,
-                            right: 30.0,
-                          ),
-                          child: TextButton(
-                            onPressed: () {},
-                            style: ButtonStyle(
-                              padding: WidgetStateProperty.all<EdgeInsets>(
-                                EdgeInsets.all(15),
-                              ),
-                              foregroundColor: WidgetStateProperty.all<Color>(
-                                Colors.white,
-                              ),
-                              backgroundColor: WidgetStateProperty.all<Color>(
-                                Colors.red,
-                              ),
-                              shape: WidgetStateProperty.all<
-                                RoundedRectangleBorder
-                              >(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(18.0),
-                                  side: BorderSide(color: Colors.red),
-                                ),
-                              ),
-                            ),
-                            child: Text('Sign In'),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20),
-                ],
+            // Next Button in bottom right
+            Positioned(
+              right: 24.0,
+              bottom: 24.0,
+              child: ElevatedButton(
+                onPressed: () {
+                  context.push('/name-screen');
+                },
+                child: const Text('Next'),
               ),
             ),
           ],
