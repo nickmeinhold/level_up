@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TermsAndConditionsScreen extends StatefulWidget {
@@ -96,6 +97,9 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                 onPressed:
                     _isChecked
                         ? () {
+                          SharedPreferences.getInstance().then((prefs) {
+                            prefs.setBool('onboarded', true);
+                          });
                           // Navigate to the next screen if checkbox is checked
                           context.go('/main-screen');
                         }

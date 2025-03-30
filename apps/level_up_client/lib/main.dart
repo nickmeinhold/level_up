@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up/auth/auth_service.dart';
-import 'package:level_up/onboarding/free_workout/email_screen.dart';
+import 'package:level_up/auth/sign_in_screen.dart';
 import 'package:level_up/onboarding/free_workout/intro_screen.dart';
 import 'package:level_up/main_screen.dart';
 import 'package:level_up/onboarding/free_workout/name_screen.dart';
@@ -12,10 +14,23 @@ import 'package:level_up/workout/exercises/exercise_details_screen.dart';
 import 'package:level_up/workout/exercises/widgets/time_up_screen.dart';
 import 'package:level_up/workout/services/workouts_service.dart';
 import 'package:level_up/workout/workout_details_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 final _router = GoRouter(
+  initialLocation:
+      locate<AuthService>().currentUserId == null ? '/signin' : '/',
   routes: [
-    GoRoute(path: '/', builder: (context, state) => OpeningScreen()),
+    GoRoute(
+      name: 'initial',
+      path: '/',
+      builder: (context, state) => const OpeningScreen(),
+    ),
+    GoRoute(
+      name: 'signin',
+      path: '/signin',
+      builder: (context, state) => const SignInScreen(),
+    ),
     GoRoute(
       path: '/intro-screen',
       builder: (context, state) => const IntroScreen(),
@@ -24,7 +39,6 @@ final _router = GoRouter(
       path: '/name-screen',
       builder: (context, state) => const NameScreen(),
     ),
-    GoRoute(path: '/email-screen', builder: (context, state) => EmailScreen()),
     GoRoute(
       path: '/terms-screen',
       builder: (context, state) => TermsAndConditionsScreen(),
@@ -54,9 +68,20 @@ final _router = GoRouter(
   ],
 );
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Setup the data layer of the "data layer architecture"
+  final firestore = FirebaseFirestore.instance;
+  // final storage = FirebaseStorage.instance;
+  final auth = FirebaseAuth.instance;
+  // final cloudFunctions = FirebaseFunctions.instance;
+
   // The services make up the repositories layer of the "data layer architecture"
-  Locator.add<AuthService>(AuthService());
+  Locator.add<AuthService>(
+    AuthService(firebaseAuth: auth, firestore: firestore),
+  );
   Locator.add<WorkoutsService>(WorkoutsService());
 
   runApp(const MainApp());

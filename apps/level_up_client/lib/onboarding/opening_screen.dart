@@ -79,7 +79,9 @@ class OpeningScreen extends StatelessWidget {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 30.0, right: 30.0),
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.push('/subscribe');
+                          },
                           style: ButtonStyle(
                             padding: WidgetStateProperty.all<EdgeInsets>(
                               EdgeInsets.all(15),
@@ -98,7 +100,7 @@ class OpeningScreen extends StatelessWidget {
                                   ),
                                 ),
                           ),
-                          child: Text('Sign In'),
+                          child: Text('Subscribe'),
                         ),
                       ),
                     ),

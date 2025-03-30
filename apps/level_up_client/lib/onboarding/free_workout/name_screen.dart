@@ -12,6 +12,7 @@ class NameScreen extends StatefulWidget {
 
 class _NameScreenState extends State<NameScreen> {
   final TextEditingController _textController = TextEditingController();
+  bool _nameEntered = false;
 
   @override
   void dispose() {
@@ -41,6 +42,15 @@ class _NameScreenState extends State<NameScreen> {
                   ),
                   maxLines: 1,
                   textAlign: TextAlign.center,
+                  onChanged: (value) {
+                    setState(() {
+                      if (value != '') {
+                        _nameEntered = true;
+                      } else {
+                        _nameEntered = false;
+                      }
+                    });
+                  },
                 ),
               ),
             ),
@@ -50,13 +60,14 @@ class _NameScreenState extends State<NameScreen> {
               right: 24.0,
               bottom: 24.0,
               child: ElevatedButton(
-                onPressed: () {
-                  final text = _textController.text;
-
-                  locate<AuthService>().update(name: text);
-
-                  context.push('/email-screen');
-                },
+                onPressed:
+                    _nameEntered
+                        ? () {
+                          final text = _textController.text;
+                          locate<AuthService>().update(name: text);
+                          context.push('/terms-screen');
+                        }
+                        : null,
                 child: const Text('Next'),
               ),
             ),
