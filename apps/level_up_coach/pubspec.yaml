@@ -1,5 +1,5 @@
 name: level_up_coach
-description: "A new Flutter project."
+description: "Level Up Coaches App."
 publish_to: 'none'
 version: 0.1.0
 
@@ -14,6 +14,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.3
 
 flutter:
   uses-material-design: true
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path_android: "assets/icons/android_icon.png"
+  image_path_ios: "assets/icons/ios_icon.png"  

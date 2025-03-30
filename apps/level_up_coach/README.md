@@ -1,3 +1,3 @@
 # level_up_coach
 
-A new Flutter project.
+A Flutter app for Level Up coaches.
