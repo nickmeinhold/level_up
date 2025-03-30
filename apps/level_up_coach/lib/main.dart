@@ -1,6 +1,47 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'package:firebase_core/firebase_core.dart';
+import 'package:go_router/go_router.dart';
+import 'package:level_up_coach/auth/auth_service.dart';
+import 'package:level_up_coach/auth/sign_in_screen.dart';
+import 'package:level_up_coach/home_screen.dart';
+import 'package:level_up_coach/utils/locator.dart';
+import 'firebase_options.dart';
+
+final _router = GoRouter(
+  initialLocation:
+      locate<AuthService>().currentUserId == null ? '/signin' : '/',
+  routes: [
+    GoRoute(
+      name: 'home',
+      path: '/',
+      builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      name: 'signin',
+      path: '/signin',
+      builder: (context, state) => const SignInScreen(),
+    ),
+  ],
+);
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Setup the data layer of the "data layer architecture"
+  final firestore = FirebaseFirestore.instance;
+  // final storage = FirebaseStorage.instance;
+  final auth = FirebaseAuth.instance;
+  // final cloudFunctions = FirebaseFunctions.instance;
+
+  // The services make up the repositories layer of the "data layer architecture"
+  Locator.add<AuthService>(
+    AuthService(firebaseAuth: auth, firestore: firestore),
+  );
+
   runApp(const MainApp());
 }
 
@@ -9,8 +50,6 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(body: Center(child: Text('Hello World!'))),
-    );
+    return MaterialApp.router(routerConfig: _router);
   }
 }
