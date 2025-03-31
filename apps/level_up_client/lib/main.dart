@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up/auth/auth_service.dart';
 import 'package:level_up/auth/sign_in_screen.dart';
+import 'package:level_up/chat/chat_service.dart';
 import 'package:level_up/onboarding/free_workout/intro_screen.dart';
 import 'package:level_up/main_screen.dart';
 import 'package:level_up/onboarding/free_workout/name_screen.dart';
-import 'package:level_up/onboarding/opening_screen.dart';
 import 'package:level_up/onboarding/free_workout/terms_and_conditions_screen.dart';
 import 'package:level_up/utils/locator.dart';
 import 'package:level_up/workout/exercises/exercise_details_screen.dart';
@@ -22,10 +22,19 @@ final _router = GoRouter(
       locate<AuthService>().currentUserId == null ? '/signin' : '/',
   routes: [
     GoRoute(
-      name: 'initial',
+      name: 'home',
       path: '/',
-      builder: (context, state) => const OpeningScreen(),
+      builder: (context, state) => const MainScreen(),
+      redirect: (BuildContext context, GoRouterState state) async {
+        bool onboarded = await locate<AuthService>().userHasOnboarded;
+        if (!onboarded) {
+          return '/opening-screen';
+        } else {
+          return null;
+        }
+      },
     ),
+    // GoRoute(path: '/opening-screen', builder: (context, state) => OpeningScreen()),
     GoRoute(
       name: 'signin',
       path: '/signin',
@@ -43,7 +52,6 @@ final _router = GoRouter(
       path: '/terms-screen',
       builder: (context, state) => TermsAndConditionsScreen(),
     ),
-    GoRoute(path: '/main-screen', builder: (context, state) => MainScreen()),
     GoRoute(
       name: 'workout-screen',
       path: '/workout-screen/:workoutId',
@@ -81,6 +89,9 @@ void main() async {
   // The services make up the repositories layer of the "data layer architecture"
   Locator.add<AuthService>(
     AuthService(firebaseAuth: auth, firestore: firestore),
+  );
+  Locator.add<ChatService>(
+    ChatService(firebaseAuth: auth, firestore: firestore),
   );
   Locator.add<WorkoutsService>(WorkoutsService());
 

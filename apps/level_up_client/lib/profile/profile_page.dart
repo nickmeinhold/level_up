@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up/auth/auth_service.dart';
 import 'package:level_up/utils/locator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -138,9 +137,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         TextButton(
                           onPressed: () {
-                            SharedPreferences.getInstance().then((prefs) {
-                              prefs.clear();
-                            });
+                            // SharedPreferences.getInstance().then((prefs) {
+                            //   prefs.clear();
+                            // });
                             Navigator.pop(context);
                             locate<AuthService>().signOut();
                             context.go('/signin');

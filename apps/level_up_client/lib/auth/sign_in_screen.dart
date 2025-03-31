@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up/auth/auth_service.dart';
 import 'package:level_up/utils/icons/custom_icons.dart';
-
-import '../utils/locator.dart';
+import 'package:level_up/utils/locator.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
