@@ -48,6 +48,42 @@
           ]
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:124874074089:android:9f0e835237e5d45d6d8d78",
+        "android_client_info": {
+          "package_name": "co.enspyr.level_up_coach"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "124874074089-58m6ah2jmacqecgrrossg1drhov2jior.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa0SkVH7AuP451STZF1PN0paYRyOcOdYA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "124874074089-58m6ah2jmacqecgrrossg1drhov2jior.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "124874074089-ced601v1trgio4lsds8bcsr8a2b8ugve.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "co.enspyr.levelUp"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "configuration_version": "1"

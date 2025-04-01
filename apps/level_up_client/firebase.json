@@ -1,1 +1,30 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"level-up-e4147","appId":"1:124874074089:android:b1775b54e74529116d8d78","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"level-up-e4147","appId":"1:124874074089:ios:b10f86402147cd5d6d8d78","uploadDebugSymbols":false,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"level-up-e4147","configurations":{"android":"1:124874074089:android:b1775b54e74529116d8d78","ios":"1:124874074089:ios:b10f86402147cd5d6d8d78","web":"1:124874074089:web:2447b415f2325ee76d8d78"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "level-up-e4147",
+          "appId": "1:124874074089:android:b1775b54e74529116d8d78",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "level-up-e4147",
+          "appId": "1:124874074089:ios:b10f86402147cd5d6d8d78",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "level-up-e4147",
+          "configurations": {
+            "android": "1:124874074089:android:b1775b54e74529116d8d78",
+            "ios": "1:124874074089:ios:b10f86402147cd5d6d8d78"
+          }
+        }
+      }
+    }
+  }
+}
