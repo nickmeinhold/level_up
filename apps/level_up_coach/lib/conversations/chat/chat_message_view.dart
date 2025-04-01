@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class ChatMessage extends StatelessWidget {
+class ChatMessageView extends StatelessWidget {
   final String message;
   final bool isMe;
 
-  const ChatMessage({super.key, required this.message, required this.isMe});
+  const ChatMessageView({super.key, required this.message, required this.isMe});
 
   @override
   Widget build(BuildContext context) {

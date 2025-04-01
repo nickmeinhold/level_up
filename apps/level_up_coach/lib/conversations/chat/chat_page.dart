@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:level_up_coach/conversations/chat_message.dart';
+import 'package:level_up_coach/conversations/chat/chat_message_view.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage({super.key});
+  const ChatPage({super.key, required this.clientId});
+
+  final String clientId;
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -10,12 +12,12 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
-  final List<ChatMessage> _messages = [];
+  final List<ChatMessageView> _messages = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Chat')),
+      appBar: AppBar(title: Text(widget.clientId)),
       body: Column(
         children: [
           // Messages list
@@ -72,7 +74,7 @@ class _ChatPageState extends State<ChatPage> {
                     if (_messageController.text.trim().isNotEmpty) {
                       setState(() {
                         _messages.add(
-                          ChatMessage(
+                          ChatMessageView(
                             message: _messageController.text,
                             isMe: true,
                           ),
@@ -81,7 +83,7 @@ class _ChatPageState extends State<ChatPage> {
                         Future.delayed(Duration(seconds: 1), () {
                           setState(() {
                             _messages.add(
-                              ChatMessage(
+                              ChatMessageView(
                                 message: 'Thanks for your message!',
                                 isMe: false,
                               ),

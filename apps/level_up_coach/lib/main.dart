@@ -6,6 +6,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_coach/auth/auth_service.dart';
 import 'package:level_up_coach/auth/sign_in_screen.dart';
+import 'package:level_up_coach/conversations/chat/chat_page.dart';
+import 'package:level_up_coach/conversations/services/conversations_service.dart';
 import 'package:level_up_coach/home_screen.dart';
 import 'package:level_up_coach/utils/locator.dart';
 import 'firebase_options.dart';
@@ -24,6 +26,13 @@ final _router = GoRouter(
       path: '/signin',
       builder: (context, state) => const SignInScreen(),
     ),
+    GoRoute(
+      name: 'chat',
+      path: '/chat/client/:clientId',
+      builder:
+          (context, state) =>
+              ChatPage(clientId: state.pathParameters['clientId']!),
+    ),
   ],
 );
 
@@ -41,6 +50,7 @@ void main() async {
   Locator.add<AuthService>(
     AuthService(firebaseAuth: auth, firestore: firestore),
   );
+  Locator.add<ConversationsService>(ConversationsService());
 
   runApp(const MainApp());
 }

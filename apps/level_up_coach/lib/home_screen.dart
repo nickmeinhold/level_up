@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:level_up_coach/conversations/chat_page.dart';
+import 'package:level_up_coach/conversations/conversations_page.dart';
 import 'package:level_up_coach/profile/profile_page.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,7 +12,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [ChatPage(), ProfilePage()];
+  final List<Widget> _screens = [ConversationsPage(), ProfilePage()];
 
   @override
   Widget build(BuildContext context) {
