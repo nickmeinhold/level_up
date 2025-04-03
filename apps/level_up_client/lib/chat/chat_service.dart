@@ -13,6 +13,14 @@ class ChatService {
   final FirebaseAuth _auth;
 
   Future<void> send(String message) async {
+    await _firestore
+        .collection('conversations')
+        .doc(_auth.currentUser!.uid)
+        .set({
+          'lastMessage': message,
+          'timestamp': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+
     DocumentReference<Map<String, dynamic>> _ = await _firestore
         .collection('conversations')
         .doc(_auth.currentUser!.uid)
