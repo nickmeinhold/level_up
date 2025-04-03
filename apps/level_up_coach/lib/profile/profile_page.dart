@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_coach/auth/auth_service.dart';
+import 'package:level_up_coach/profile/profile_service.dart';
 import 'package:level_up_coach/utils/locator.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -14,6 +15,71 @@ class _ProfilePageState extends State<ProfilePage> {
   final TextEditingController _nameController = TextEditingController(
     text: 'John Doe',
   );
+
+  bool _isLoading = true;
+  bool _isCoach = false;
+  bool _hasPendingApplication = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkCoachStatus();
+  }
+
+  Future<void> _checkCoachStatus() async {
+    _isCoach = await locate<ProfileService>().isCoach();
+
+    if (_isCoach) {
+      setState(() {
+        _isCoach = true;
+        _isLoading = false;
+      });
+      return;
+    }
+
+    _hasPendingApplication =
+        await locate<ProfileService>().hasPendingApplication();
+    if (_hasPendingApplication) {
+      setState(() {
+        _isLoading = false;
+      });
+      return;
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  Future<void> _applyToBeCoach() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      await locate<ProfileService>().applyToBeCoach();
+
+      setState(() {
+        _hasPendingApplication = true;
+        _isLoading = false;
+      });
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Application submitted successfully!')),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to submit application: $e')),
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +113,53 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ],
+            ),
+          ),
+          SizedBox(height: 24.0),
+
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child:
+                  _isLoading
+                      ? CircularProgressIndicator()
+                      : Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (_isCoach)
+                            ElevatedButton(
+                              onPressed: null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                disabledForegroundColor: Colors.white,
+                              ),
+                              child: Text('You are a coach'),
+                            )
+                          else if (_hasPendingApplication)
+                            ElevatedButton(
+                              onPressed: null,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.orange,
+                                disabledForegroundColor: Colors.white,
+                              ),
+                              child: Text('Application pending...'),
+                            )
+                          else
+                            ElevatedButton(
+                              onPressed: _applyToBeCoach,
+                              child: Text('Apply to be a coach'),
+                            ),
+                          SizedBox(height: 20),
+                          Text(
+                            _isCoach
+                                ? 'You have coach privileges'
+                                : _hasPendingApplication
+                                ? 'Your application is under review'
+                                : 'Submit your application to become a coach',
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ],
+                      ),
             ),
           ),
           SizedBox(height: 24.0),

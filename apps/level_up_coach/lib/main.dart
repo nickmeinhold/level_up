@@ -9,6 +9,7 @@ import 'package:level_up_coach/auth/sign_in_screen.dart';
 import 'package:level_up_coach/conversations/chat/chat_page.dart';
 import 'package:level_up_coach/conversations/services/conversations_service.dart';
 import 'package:level_up_coach/home_screen.dart';
+import 'package:level_up_coach/profile/profile_service.dart';
 import 'package:level_up_coach/utils/locator.dart';
 import 'firebase_options.dart';
 
@@ -51,6 +52,9 @@ void main() async {
     AuthService(firebaseAuth: auth, firestore: firestore),
   );
   Locator.add<ConversationsService>(ConversationsService());
+  Locator.add<ProfileService>(
+    ProfileService(firebaseAuth: auth, firestore: firestore),
+  );
 
   runApp(const MainApp());
 }
