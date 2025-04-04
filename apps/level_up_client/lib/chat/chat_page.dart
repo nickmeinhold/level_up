@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:level_up/auth/auth_service.dart';
 import 'package:level_up/chat/chat_message_view.dart';
 import 'package:level_up/chat/chat_service.dart';
 import 'package:level_up/chat/models/chat_message.dart';
@@ -13,6 +14,13 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
+  late final String currentUserId;
+
+  @override
+  void initState() {
+    super.initState();
+    currentUserId = locate<AuthService>().currentUserId!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +56,7 @@ class _ChatPageState extends State<ChatPage> {
                             ChatMessage message = messages[index];
                             return ChatMessageView(
                               message: message.message,
+                              currentUserId: currentUserId,
                               authorId: message.authorId,
                             );
                           },
