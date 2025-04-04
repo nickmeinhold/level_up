@@ -29,6 +29,7 @@ class ChatService {
           'authorId': _auth.currentUser!.uid,
           'message': message,
           'timestamp': FieldValue.serverTimestamp(),
+          'read': false,
         });
   }
 
@@ -37,8 +38,8 @@ class ChatService {
         .collection('conversations')
         .doc(_auth.currentUser!.uid)
         .collection('messages')
-        // .orderBy('timestamp')
-        // .limit(10)
+        .orderBy('timestamp', descending: true)
+        .limit(10)
         .snapshots()
         .map<List<ChatMessage>>((QuerySnapshot<Map<String, dynamic>> snapshot) {
           List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
