@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_coach/conversations/conversation_list_item.dart';
+import 'package:level_up_coach/conversations/models/conversation.dart';
 import 'package:level_up_coach/conversations/services/conversations_service.dart';
 import 'package:level_up_coach/utils/locator.dart';
 
@@ -10,29 +11,32 @@ class ConversationsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Conversations'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Implement search functionality
-            },
-          ),
-        ],
-      ),
-      body: ListView.separated(
-        itemCount: locate<ConversationsService>().conversations.length,
-        separatorBuilder: (context, index) => Divider(height: 1),
-        itemBuilder: (context, index) {
-          final conversation =
-              locate<ConversationsService>().conversations[index];
-          return ConversationListItem(
-            conversation: conversation,
-            onTap: () {
-              context.pushNamed(
-                'chat',
-                pathParameters: {'clientId': conversation.clientId},
+      appBar: AppBar(title: Text('Conversations')),
+      body: FutureBuilder<List<Conversation>>(
+        future: locate<ConversationsService>().retrieveConversations(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Center(child: Text(snapshot.error.toString()));
+          }
+
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          List<Conversation> conversations = snapshot.data!;
+          return ListView.separated(
+            itemCount: conversations.length,
+            separatorBuilder: (context, index) => Divider(height: 1),
+            itemBuilder: (context, index) {
+              final conversation = conversations[index];
+              return ConversationListItem(
+                conversation: conversation,
+                onTap: () {
+                  context.pushNamed(
+                    'chat',
+                    pathParameters: {'clientId': conversation.id},
+                  );
+                },
               );
             },
           );

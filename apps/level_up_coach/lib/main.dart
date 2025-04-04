@@ -51,7 +51,7 @@ void main() async {
   Locator.add<AuthService>(
     AuthService(firebaseAuth: auth, firestore: firestore),
   );
-  Locator.add<ConversationsService>(ConversationsService());
+  Locator.add<ConversationsService>(ConversationsService(firestore: firestore));
   Locator.add<ProfileService>(
     ProfileService(firebaseAuth: auth, firestore: firestore),
   );

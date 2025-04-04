@@ -69,18 +69,4 @@ class AuthService {
     await profileStreamSubscription?.cancel();
     return _auth.signOut();
   }
-
-  Future<void> update({String? name}) async {
-    if (_auth.currentUser == null) {
-      throw Exception(
-        'The user must be signed in and onboarded before the name is updated.',
-      );
-    }
-
-    if (name != null) {
-      await _firestore.doc('profiles/${_auth.currentUser!.uid}').set({
-        'name': name,
-      }, SetOptions(merge: true));
-    }
-  }
 }

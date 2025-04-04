@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:level_up_coach/profile/models/client.dart';
 
 class ProfileService {
   ProfileService({
@@ -43,5 +44,32 @@ class ProfileService {
           'applicationDate': FieldValue.serverTimestamp(),
           'status': 'pending',
         });
+  }
+
+  Future<void> update({String? name}) async {
+    if (_auth.currentUser == null) {
+      throw Exception(
+        'The user must be signed in and onboarded before the name is updated.',
+      );
+    }
+
+    if (name != null) {
+      await _firestore.doc('profiles/${_auth.currentUser!.uid}').set({
+        'name': name,
+      }, SetOptions(merge: true));
+    }
+  }
+
+  Future<Client> retrieveClient() async {
+    if (_auth.currentUser == null) {
+      throw Exception(
+        'The user must be signed in and onboarded before retrieving a Client.',
+      );
+    }
+
+    final DocumentSnapshot<Map<String, dynamic>> snapshot =
+        await _firestore.doc('profiles/${_auth.currentUser!.uid}').get();
+
+    return Client.fromJsonWithId(id: snapshot.id, json: snapshot.data() ?? {});
   }
 }
