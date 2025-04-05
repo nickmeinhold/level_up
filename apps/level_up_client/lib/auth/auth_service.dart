@@ -8,9 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   AuthService({
-    required FirebaseAuth firebaseAuth,
+    required FirebaseAuth auth,
     required FirebaseFirestore firestore,
-  }) : _auth = firebaseAuth,
+  }) : _auth = auth,
        _firestore = firestore {
     // When a User object is emitted by the FirebaseAuth's onAuthStateChanges
     // stream we create a subscription to the firestore, which is cancelled on

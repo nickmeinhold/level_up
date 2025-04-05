@@ -96,12 +96,8 @@ void main() async {
   // final cloudFunctions = FirebaseFunctions.instance;
 
   // The services make up the repositories layer of the "data layer architecture"
-  Locator.add<AuthService>(
-    AuthService(firebaseAuth: auth, firestore: firestore),
-  );
-  Locator.add<ChatService>(
-    ChatService(firebaseAuth: auth, firestore: firestore),
-  );
+  Locator.add<AuthService>(AuthService(auth: auth, firestore: firestore));
+  Locator.add<ChatService>(ChatService(auth: auth, firestore: firestore));
   Locator.add<WorkoutsService>(WorkoutsService());
 
   runApp(const MainApp());

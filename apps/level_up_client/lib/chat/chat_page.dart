@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:level_up/auth/auth_service.dart';
 import 'package:level_up/chat/chat_service.dart';
-import 'package:level_up/chat/models/chat_message.dart';
-import 'package:level_up/chat/text_message_view.dart';
-import 'package:level_up/chat/video_message_view.dart';
 import 'package:level_up/utils/locator.dart';
+import 'package:level_up_chat/chat_message.dart';
+import 'package:level_up_chat/text_message_view.dart';
+import 'package:level_up_chat/video_message_view.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});

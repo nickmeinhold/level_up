@@ -1,12 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:level_up/chat/models/chat_message.dart';
+import 'package:level_up_chat/chat_message.dart';
 
 class ChatService {
   ChatService({
-    required FirebaseAuth firebaseAuth,
+    required FirebaseAuth auth,
     required FirebaseFirestore firestore,
-  }) : _auth = firebaseAuth,
+  }) : _auth = auth,
        _firestore = firestore;
 
   final FirebaseFirestore _firestore;
