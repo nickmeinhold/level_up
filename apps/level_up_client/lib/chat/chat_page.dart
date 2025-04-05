@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:level_up/auth/auth_service.dart';
-import 'package:level_up/chat/chat_message_view.dart';
 import 'package:level_up/chat/chat_service.dart';
 import 'package:level_up/chat/models/chat_message.dart';
+import 'package:level_up/chat/text_message_view.dart';
+import 'package:level_up/chat/video_message_view.dart';
 import 'package:level_up/utils/locator.dart';
 
 class ChatPage extends StatefulWidget {
@@ -54,11 +55,20 @@ class _ChatPageState extends State<ChatPage> {
                           itemCount: messages.length,
                           itemBuilder: (context, index) {
                             ChatMessage message = messages[index];
-                            return ChatMessageView(
-                              message: message.message,
-                              currentUserId: currentUserId,
-                              authorId: message.authorId,
-                            );
+                            switch (message) {
+                              case TextChatMessage():
+                                return TextMessageView(
+                                  message: message.message,
+                                  currentUserId: currentUserId,
+                                  authorId: message.authorId,
+                                );
+                              case VideoChatMessage():
+                                return VideoMessageView(
+                                  videoUrl: message.videoUrl,
+                                  currentUserId: currentUserId,
+                                  authorId: message.authorId,
+                                );
+                            }
                           },
                         ),
               ),

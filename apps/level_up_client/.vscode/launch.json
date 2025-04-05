@@ -9,18 +9,6 @@
       "name": "level_up",
       "request": "launch",
       "type": "dart"
-    },
-    {
-      "name": "level_up (profile mode)",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "level_up (release mode)",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
     }
   ]
 }

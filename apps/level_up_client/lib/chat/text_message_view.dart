@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ChatMessageView extends StatelessWidget {
-  const ChatMessageView({
+class TextMessageView extends StatelessWidget {
+  const TextMessageView({
     super.key,
     required this.message,
     required this.authorId,

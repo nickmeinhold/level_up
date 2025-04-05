@@ -1,3 +1,3 @@
 # level_up
 
-A new Flutter project.
+A flutter app for Level Up basketball.

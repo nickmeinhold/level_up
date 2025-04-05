@@ -28,6 +28,7 @@ class ChatService {
         .add({
           'authorId': _auth.currentUser!.uid,
           'message': message,
+          'type': 'text',
           'timestamp': FieldValue.serverTimestamp(),
           'read': false,
         });

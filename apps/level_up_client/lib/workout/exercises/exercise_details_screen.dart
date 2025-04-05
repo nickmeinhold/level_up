@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:level_up/utils/locator.dart';
 import 'package:level_up/workout/exercises/widgets/reps_exercise_view.dart';
 import 'package:level_up/workout/exercises/widgets/reps_exercise_with_weights_view.dart';
@@ -108,7 +109,9 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
                       const SizedBox(width: 12.0),
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.push('/video-form');
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.green,
                             padding: const EdgeInsets.symmetric(vertical: 12.0),

@@ -9,7 +9,9 @@ import 'package:level_up/onboarding/free_workout/intro_screen.dart';
 import 'package:level_up/main_screen.dart';
 import 'package:level_up/onboarding/free_workout/name_screen.dart';
 import 'package:level_up/onboarding/free_workout/terms_and_conditions_screen.dart';
+import 'package:level_up/onboarding/opening_screen.dart';
 import 'package:level_up/utils/locator.dart';
+import 'package:level_up/video/video_recorder_screen.dart';
 import 'package:level_up/workout/exercises/exercise_details_screen.dart';
 import 'package:level_up/workout/exercises/widgets/time_up_screen.dart';
 import 'package:level_up/workout/services/workouts_service.dart';
@@ -34,7 +36,10 @@ final _router = GoRouter(
         }
       },
     ),
-    // GoRoute(path: '/opening-screen', builder: (context, state) => OpeningScreen()),
+    GoRoute(
+      path: '/opening-screen',
+      builder: (context, state) => OpeningScreen(),
+    ),
     GoRoute(
       name: 'signin',
       path: '/signin',
@@ -72,6 +77,10 @@ final _router = GoRouter(
     GoRoute(
       path: '/time-up',
       builder: (context, state) => const TimeUpScreen(),
+    ),
+    GoRoute(
+      path: '/video-form',
+      builder: (context, state) => const VideoRecorderScreen(),
     ),
   ],
 );

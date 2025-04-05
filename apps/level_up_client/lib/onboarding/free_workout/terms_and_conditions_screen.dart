@@ -101,7 +101,7 @@ class _TermsAndConditionsScreenState extends State<TermsAndConditionsScreen> {
                             prefs.setBool('onboarded', true);
                           });
                           // Navigate to the next screen if checkbox is checked
-                          context.go('/main-screen');
+                          context.go('/');
                         }
                         : null, // Button is disabled if checkbox is not checked
                 child: const Text('Done'),

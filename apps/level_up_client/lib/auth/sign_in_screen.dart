@@ -21,7 +21,9 @@ class _SignInScreenState extends State<SignInScreen> {
     });
     await locate<AuthService>().signInWithApple();
 
-    await _navigateToOnboadingOrMainScreen();
+    if (context.mounted) {
+      context.go('/');
+    }
   }
 
   Future<void> _signInWithGoogle(BuildContext context) async {
@@ -30,17 +32,8 @@ class _SignInScreenState extends State<SignInScreen> {
     });
     await locate<AuthService>().signInWithGoogle();
 
-    await _navigateToOnboadingOrMainScreen();
-  }
-
-  Future<void> _navigateToOnboadingOrMainScreen() async {
-    final bool onboarded = await locate<AuthService>().userHasOnboarded;
-    if (mounted) {
-      if (onboarded) {
-        context.go('/main-screen');
-      } else {
-        context.go('/');
-      }
+    if (context.mounted) {
+      context.go('/');
     }
   }
 
