@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:go_router/go_router.dart';
+import 'package:level_up_chat/chat_page.dart';
 import 'package:level_up_coach/auth/auth_service.dart';
 import 'package:level_up_coach/auth/sign_in_screen.dart';
-import 'package:level_up_coach/conversations/chat/chat_page.dart';
 import 'package:level_up_coach/conversations/services/conversations_service.dart';
 import 'package:level_up_coach/home_screen.dart';
 import 'package:level_up_coach/profile/profile_service.dart';
@@ -29,10 +29,12 @@ final _router = GoRouter(
     ),
     GoRoute(
       name: 'chat',
-      path: '/chat/client/:clientId',
+      path: '/chat/client/:clientId/coach:coachId',
       builder:
-          (context, state) =>
-              ChatPage(clientId: state.pathParameters['clientId']!),
+          (context, state) => ChatPage(
+            conversationId: state.pathParameters['clientId']!,
+            currentUserId: state.pathParameters['coachId']!,
+          ),
     ),
   ],
 );
@@ -51,9 +53,7 @@ void main() async {
   Locator.add<AuthService>(
     AuthService(firebaseAuth: auth, firestore: firestore),
   );
-  Locator.add<ConversationsService>(
-    ConversationsService(auth: auth, firestore: firestore),
-  );
+  Locator.add<ConversationsService>(ConversationsService(firestore: firestore));
   Locator.add<ProfileService>(
     ProfileService(firebaseAuth: auth, firestore: firestore),
   );

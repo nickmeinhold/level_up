@@ -8,19 +8,8 @@
     {
       "name": "level_up_coach",
       "request": "launch",
-      "type": "dart"
-    },
-    {
-      "name": "level_up_coach (profile mode)",
-      "request": "launch",
       "type": "dart",
-      "flutterMode": "profile"
-    },
-    {
-      "name": "level_up_coach (release mode)",
-      "request": "launch",
-      "type": "dart",
-      "flutterMode": "release"
+      "program": "${workspaceFolder:level_up_coach}/lib/main.dart",
     }
   ]
 }

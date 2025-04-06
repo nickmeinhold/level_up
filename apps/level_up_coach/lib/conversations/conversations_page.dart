@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:level_up_coach/auth/auth_service.dart';
 import 'package:level_up_coach/conversations/conversation_list_item.dart';
 import 'package:level_up_coach/conversations/models/conversation.dart';
 import 'package:level_up_coach/conversations/services/conversations_service.dart';
@@ -34,7 +35,10 @@ class ConversationsPage extends StatelessWidget {
                 onTap: () {
                   context.pushNamed(
                     'chat',
-                    pathParameters: {'clientId': conversation.id},
+                    pathParameters: {
+                      'clientId': conversation.id,
+                      'coachId': locate<AuthService>().currentUserId!,
+                    },
                   );
                 },
               );
