@@ -8,7 +8,8 @@
     {
       "name": "level_up",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "program": "${workspaceFolder:level_up}/lib/main.dart",
     }
   ]
 }

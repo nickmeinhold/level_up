@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:level_up/chat/chat_page.dart';
+import 'package:level_up/auth/auth_service.dart';
+import 'package:level_up/utils/locator.dart';
+import 'package:level_up_chat/chat_page.dart';
 import 'package:level_up/profile/profile_page.dart';
 import 'package:level_up/workout/workout_page.dart';
 
@@ -13,7 +15,14 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
-  final List<Widget> _screens = [WorkoutPage(), ChatPage(), ProfilePage()];
+  final List<Widget> _screens = [
+    WorkoutPage(),
+    ChatPage(
+      conversationId: locate<AuthService>().currentUserId!,
+      currentUserId: locate<AuthService>().currentUserId!,
+    ),
+    ProfilePage(),
+  ];
 
   @override
   Widget build(BuildContext context) {

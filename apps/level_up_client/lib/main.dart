@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up/auth/auth_service.dart';
 import 'package:level_up/auth/sign_in_screen.dart';
-import 'package:level_up/chat/chat_service.dart';
 import 'package:level_up/onboarding/free_workout/intro_screen.dart';
 import 'package:level_up/main_screen.dart';
 import 'package:level_up/onboarding/free_workout/name_screen.dart';
@@ -97,7 +96,6 @@ void main() async {
 
   // The services make up the repositories layer of the "data layer architecture"
   Locator.add<AuthService>(AuthService(auth: auth, firestore: firestore));
-  Locator.add<ChatService>(ChatService(auth: auth, firestore: firestore));
   Locator.add<WorkoutsService>(WorkoutsService());
 
   runApp(const MainApp());
