@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:level_up_chat/level_up_chat.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 
 void main() {
   test('adds one to input values', () {
