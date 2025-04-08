@@ -1,5 +1,5 @@
-name: level_up_chat
-description: "A new Flutter package project."
+name: level_up_shared
+description: "Models and views shared between level_up and level_up_coach"
 version: 0.0.1
 
 environment:
