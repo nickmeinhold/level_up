@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:level_up_shared/chat_message.dart';
-import 'package:level_up_shared/text_message_view.dart';
-import 'package:level_up_shared/video_message_view.dart';
+import 'package:level_up_shared/src/chat/chat_message.dart';
+import 'package:level_up_shared/src/chat/text_message_view.dart';
+import 'package:level_up_shared/src/chat/video_message_view.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ChatPage extends StatefulWidget {
