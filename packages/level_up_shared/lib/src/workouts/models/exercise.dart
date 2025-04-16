@@ -19,7 +19,7 @@ sealed class Exercise {
     return switch (json['type'] as String) {
       'timed' => TimedExercise.fromJsonWithId(id, json),
       'reps' => RepsExercise.fromJsonWithId(id, json),
-      'repsWithWeights' => RepsExerciseWithWeights.fromJsonWithId(id, json),
+      'repsWithWeight' => RepsExerciseWithWeight.fromJsonWithId(id, json),
       _ => throw 'No type was present in the Exercise json from firestore',
     };
   }
@@ -42,6 +42,7 @@ class TimedExercise extends Exercise {
   @override
   Map<String, Object?> toJson() {
     return {
+      'type': 'timed',
       'title': title,
       'subtitle': subtitle,
       'description': description,
@@ -81,6 +82,7 @@ class RepsExercise extends Exercise {
   @override
   Map<String, Object?> toJson() {
     return {
+      'type': 'reps',
       'title': title,
       'subtitle': subtitle,
       'description': description,
@@ -103,8 +105,8 @@ class RepsExercise extends Exercise {
   }
 }
 
-class RepsExerciseWithWeights extends RepsExercise {
-  const RepsExerciseWithWeights({
+class RepsExerciseWithWeight extends RepsExercise {
+  const RepsExerciseWithWeight({
     required super.id,
     required super.videoUrl,
     required super.title,
@@ -120,6 +122,7 @@ class RepsExerciseWithWeights extends RepsExercise {
   @override
   Map<String, Object?> toJson() {
     return {
+      'type': 'repsWithWeight',
       'title': title,
       'subtitle': subtitle,
       'description': description,
@@ -129,11 +132,11 @@ class RepsExerciseWithWeights extends RepsExercise {
     };
   }
 
-  factory RepsExerciseWithWeights.fromJsonWithId(
+  factory RepsExerciseWithWeight.fromJsonWithId(
     String id,
     Map<String, Object?> json,
   ) {
-    return RepsExerciseWithWeights(
+    return RepsExerciseWithWeight(
       id: id,
       videoUrl: json['videoUrl'] as String,
       title: json['title'] as String,
