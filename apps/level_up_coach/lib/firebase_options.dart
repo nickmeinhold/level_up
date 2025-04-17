@@ -48,12 +48,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyDLilfX7jpiRE8naWIqAm23LLp0SpmZHAk',
-    appId: '1:124874074089:web:2447b415f2325ee76d8d78',
+    appId: '1:124874074089:web:a5dabb64ee37a9076d8d78',
     messagingSenderId: '124874074089',
     projectId: 'level-up-e4147',
     authDomain: 'level-up-e4147.firebaseapp.com',
     storageBucket: 'level-up-e4147.firebasestorage.app',
-    measurementId: 'G-ERKJFLV6E4',
+    measurementId: 'G-535RNX1GMV',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -70,7 +70,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '124874074089',
     projectId: 'level-up-e4147',
     storageBucket: 'level-up-e4147.firebasestorage.app',
-    androidClientId: '124874074089-c13a3li6g0vhtvej6rte6t44ruc1pc85.apps.googleusercontent.com',
+    androidClientId: '124874074089-9hc771ln1d8poapru31cdvc72auif84l.apps.googleusercontent.com',
     iosClientId: '124874074089-ifp1hm3acira15ad2j96kvvtosiltvmv.apps.googleusercontent.com',
     iosBundleId: 'co.enspyr.levelUpCoach',
   );

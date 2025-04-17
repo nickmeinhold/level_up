@@ -58,6 +58,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "124874074089-9hc771ln1d8poapru31cdvc72auif84l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "co.enspyr.level_up_coach",
+            "certificate_hash": "87f20b5916c54a08596a30d4a754f6c98a2ca1d8"
+          }
+        },
+        {
           "client_id": "124874074089-58m6ah2jmacqecgrrossg1drhov2jior.apps.googleusercontent.com",
           "client_type": 3
         }
