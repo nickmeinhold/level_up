@@ -14,8 +14,8 @@ dependencies:
   firebase_auth: ^5.5.1
   google_sign_in: ^6.3.0
   go_router: ^14.8.1
-  level_up_chat:
-    path: ../level_up_chat
+  level_up_shared:
+    path: ../level_up_shared
   rxdart: ^0.28.0
   timeago: ^3.7.0
 

@@ -4,9 +4,9 @@ import 'package:level_up_coach/profile/models/client.dart';
 
 class ProfileService {
   ProfileService({
-    required FirebaseAuth firebaseAuth,
+    required FirebaseAuth auth,
     required FirebaseFirestore firestore,
-  }) : _auth = firebaseAuth,
+  }) : _auth = auth,
        _firestore = firestore;
 
   final FirebaseFirestore _firestore;
