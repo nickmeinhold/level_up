@@ -1,4 +1,10 @@
+import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_coach/utils/locator.dart';
 import 'package:level_up_coach/workouts/services/workouts_service.dart';
@@ -14,6 +20,54 @@ class WorkoutDetailScreen extends StatefulWidget {
 }
 
 class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
+  bool _uploading = false;
+
+  Future<void> _pickFile() async {
+    setState(() {
+      _uploading = true;
+    });
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowMultiple: false,
+        allowedExtensions: ['png'],
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        PlatformFile file = result.files.first;
+
+        Uint8List fileData = Uint8List(0);
+
+        if (file.bytes != null) {
+          // Web or when bytes are available
+          fileData = file.bytes!;
+        } else if (file.path != null) {
+          // Native platforms
+          fileData = await File(file.path!).readAsBytes();
+        }
+
+        locate<WorkoutsService>().uploadWorkoutImage(
+          widget.workoutId,
+          fileData,
+        );
+      } else {
+        log('User canceled the picker');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(e.toString())));
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _uploading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Workout>(
@@ -55,6 +109,49 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
                   child: Text(workout.description),
+                ),
+                SizedBox(
+                  height: 100,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child:
+                            (_uploading)
+                                ? CircularProgressIndicator()
+                                : ElevatedButton(
+                                  onPressed: _pickFile,
+                                  style: ElevatedButton.styleFrom(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 24,
+                                      vertical: 12,
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Upload Image',
+                                    style: TextStyle(fontSize: 18),
+                                  ),
+                                ),
+                      ),
+                      FutureBuilder<String>(
+                        future: locate<WorkoutsService>().getWorkoutImageUrl(
+                          widget.workoutId,
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            return Center(
+                              child: Text(snapshot.error.toString()),
+                            );
+                          }
+                          if (!snapshot.hasData) {
+                            return CircularProgressIndicator();
+                          }
+                          return Image.network(snapshot.data!);
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 Text(
                   'Exercises (${workout.exerciseIds.length})',

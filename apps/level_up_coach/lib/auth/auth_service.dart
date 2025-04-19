@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/subjects.dart';
 
@@ -48,21 +49,33 @@ class AuthService {
   }
 
   Future<void> signInWithGoogle() async {
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+    if (kIsWeb) {
+      GoogleAuthProvider googleProvider = GoogleAuthProvider();
+      final _ = await FirebaseAuth.instance.signInWithPopup(googleProvider);
 
-    final _ = await _auth.signInWithCredential(credential);
+      // Or use signInWithRedirect
+      // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
+    } else {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAuthentication? googleAuth =
+          await googleUser?.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
+
+      final _ = await _auth.signInWithCredential(credential);
+    }
   }
 
   Future<void> signInWithApple() async {
-    final provider = AppleAuthProvider();
+    final appleProvider = AppleAuthProvider();
 
-    final _ = await _auth.signInWithProvider(provider);
+    if (kIsWeb) {
+      final _ = await FirebaseAuth.instance.signInWithPopup(appleProvider);
+    } else {
+      final _ = await FirebaseAuth.instance.signInWithProvider(appleProvider);
+    }
   }
 
   Future<void> signOut() async {

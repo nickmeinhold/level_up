@@ -18,6 +18,8 @@ dependencies:
     path: ../level_up_shared
   rxdart: ^0.28.0
   timeago: ^3.7.0
+  file_picker: ^10.1.2
+  firebase_storage: ^12.4.5
 
 dev_dependencies:
   flutter_test:

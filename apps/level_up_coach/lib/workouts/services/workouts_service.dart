@@ -1,13 +1,19 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 
 class WorkoutsService {
-  WorkoutsService({required FirebaseFirestore firestore})
-    : _firestore = firestore;
+  WorkoutsService({
+    required FirebaseFirestore firestore,
+    required FirebaseStorage storage,
+  }) : _firestore = firestore,
+       _storage = storage;
 
   final FirebaseFirestore _firestore;
+  final FirebaseStorage _storage;
 
   // We retrieve the exercises of a given workout and add them to a stream
   // that updates the UI
@@ -76,6 +82,24 @@ class WorkoutsService {
     }, SetOptions(merge: true));
 
     return docRef.id;
+  }
+
+  Future<void> uploadWorkoutImage(String workoutId, Uint8List data) async {
+    final task = _storage
+        .ref()
+        .child('workouts')
+        .child(workoutId)
+        .child('main_image.png')
+        .putData(data, SettableMetadata(contentType: 'image/png'));
+
+    final _ = await task;
+  }
+
+  Future<String> getWorkoutImageUrl(String workoutId) {
+    return _storage
+        .ref()
+        .child('workouts/$workoutId/main_image.png')
+        .getDownloadURL();
   }
 
   void dispose() {

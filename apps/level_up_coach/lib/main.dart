@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -64,7 +65,7 @@ void main() async {
 
   // Setup the data layer of the "data layer architecture"
   final firestore = FirebaseFirestore.instance;
-  // final storage = FirebaseStorage.instance;
+  final storage = FirebaseStorage.instance;
   final auth = FirebaseAuth.instance;
   // final cloudFunctions = FirebaseFunctions.instance;
 
@@ -74,7 +75,9 @@ void main() async {
   );
   Locator.add<ConversationsService>(ConversationsService(firestore: firestore));
   Locator.add<ProfileService>(ProfileService(auth: auth, firestore: firestore));
-  Locator.add<WorkoutsService>(WorkoutsService(firestore: firestore));
+  Locator.add<WorkoutsService>(
+    WorkoutsService(firestore: firestore, storage: storage),
+  );
 
   runApp(const MainApp());
 }
