@@ -17,8 +17,8 @@ dependencies:
     sdk: flutter
   go_router: ^14.8.1
   google_sign_in: ^6.3.0
-  level_up_chat:
-    path: ../level_up_chat
+  level_up_shared:
+    path: ../level_up_shared
   path: ^1.9.1
   path_provider: ^2.1.5
   rxdart: ^0.28.0

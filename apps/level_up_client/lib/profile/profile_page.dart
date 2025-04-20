@@ -132,7 +132,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       content: Text('Are you sure you want to logout?'),
                       actions: [
                         TextButton(
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () => context.pop(),
                           child: Text('CANCEL'),
                         ),
                         TextButton(
@@ -140,7 +140,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             // SharedPreferences.getInstance().then((prefs) {
                             //   prefs.clear();
                             // });
-                            Navigator.pop(context);
+                            context.pop();
                             locate<AuthService>().signOut();
                             context.go('/signin');
                           },

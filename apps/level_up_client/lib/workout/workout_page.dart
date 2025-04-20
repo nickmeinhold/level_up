@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up/utils/locator.dart';
-import 'package:level_up/workout/models/workout.dart';
 import 'package:level_up/workout/services/workouts_service.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 
 class WorkoutPage extends StatefulWidget {
   const WorkoutPage({super.key});
@@ -17,12 +17,22 @@ class _WorkoutPageState extends State<WorkoutPage>
   int _currentPage = 0;
   late TabController _tabController;
   late List<Workout> _workouts;
+  bool _loadingWorkouts = true;
+
+  Future<void> _retrieveWorkouts() async {
+    _workouts = await locate<WorkoutsService>().retrieveWorkouts();
+    if (mounted) {
+      setState(() {
+        _loadingWorkouts = false;
+      });
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    _workouts = locate<WorkoutsService>().retrieveWorkouts();
     _tabController = TabController(length: 3, vsync: this);
+    _retrieveWorkouts();
   }
 
   @override
@@ -45,70 +55,77 @@ class _WorkoutPageState extends State<WorkoutPage>
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: _workouts.length,
-              onPageChanged: (int page) {
-                setState(() {
-                  _currentPage = page;
-                });
-              },
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16.0),
-                    child: GestureDetector(
-                      onTap: () {
-                        context.pushNamed(
-                          'workout-screen',
-                          pathParameters: {'workoutId': _workouts[index].id},
+      body:
+          (_loadingWorkouts)
+              ? Center(child: CircularProgressIndicator())
+              : Column(
+                children: [
+                  Expanded(
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: _workouts.length,
+                      onPageChanged: (int page) {
+                        setState(() {
+                          _currentPage = page;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(16.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                context.pushNamed(
+                                  'workout-screen',
+                                  pathParameters: {
+                                    'workoutId': _workouts[index].id,
+                                  },
+                                );
+                              },
+                              child: Image.network(
+                                locate<WorkoutsService>().getWorkoutImageUrl(
+                                  _workouts[index].id,
+                                ),
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Center(
+                                    child: Icon(
+                                      Icons.error,
+                                      size: 50,
+                                      color: Colors.red,
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
                         );
                       },
-                      child: Image.asset(
-                        _workouts[index].image,
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Center(
-                            child: Icon(
-                              Icons.error,
-                              size: 50,
-                              color: Colors.red,
-                            ),
-                          );
-                        },
+                    ),
+                  ),
+                  // Page indicator
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      _workouts.length,
+                      (index) => Container(
+                        margin: EdgeInsets.symmetric(horizontal: 4.0),
+                        width: 10.0,
+                        height: 10.0,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color:
+                              _currentPage == index
+                                  ? Theme.of(context).primaryColor
+                                  : Colors.grey,
+                        ),
                       ),
                     ),
                   ),
-                );
-              },
-            ),
-          ),
-          // Page indicator
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(
-              _workouts.length,
-              (index) => Container(
-                margin: EdgeInsets.symmetric(horizontal: 4.0),
-                width: 10.0,
-                height: 10.0,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color:
-                      _currentPage == index
-                          ? Theme.of(context).primaryColor
-                          : Colors.grey,
-                ),
+                  SizedBox(height: 20),
+                ],
               ),
-            ),
-          ),
-          SizedBox(height: 20),
-        ],
-      ),
     );
   }
 }

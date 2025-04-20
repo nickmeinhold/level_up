@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:level_up/workout/models/exercise.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 
 class RepsExerciseWithWeightsView extends StatefulWidget {
   const RepsExerciseWithWeightsView({required this.exercise, super.key});
 
-  final RepsExerciseWithWeights exercise;
+  final RepsExerciseWithWeight exercise;
 
   @override
   State<RepsExerciseWithWeightsView> createState() =>
@@ -16,7 +16,7 @@ class _RepsExerciseWithWeightsViewState
     extends State<RepsExerciseWithWeightsView> {
   late final int _reps;
   late final int _sets;
-  late final int _weight;
+  late final double _weight;
   late final List<bool> _isChecked;
   int _numCompletedSets = 0;
 

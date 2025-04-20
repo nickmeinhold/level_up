@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:level_up/workout/models/exercise.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 
 const int kSecondsPerMinute = 60;
 

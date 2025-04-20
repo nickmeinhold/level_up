@@ -66,11 +66,10 @@ final _router = GoRouter(
     ),
     GoRoute(
       name: 'exercise-screen',
-      path: '/exercise-screen/:workoutId/:exerciseNum',
+      path: '/exercise-screen/exerciseId/:exerciseId',
       builder:
           (context, state) => ExerciseDetailsScreen(
-            workoutId: state.pathParameters['workoutId']!,
-            exerciseNum: state.pathParameters['exerciseNum']!,
+            exerciseId: state.pathParameters['exerciseId']!,
           ),
     ),
     GoRoute(
@@ -90,13 +89,15 @@ void main() async {
 
   // Setup the data layer of the "data layer architecture"
   final firestore = FirebaseFirestore.instance;
-  // final storage = FirebaseStorage.instance;
+  // final clientFormVideosStorage = FirebaseStorage.instanceFor(
+  //   bucket: 'client-form-videos',
+  // );
   final auth = FirebaseAuth.instance;
   // final cloudFunctions = FirebaseFunctions.instance;
 
   // The services make up the repositories layer of the "data layer architecture"
   Locator.add<AuthService>(AuthService(auth: auth, firestore: firestore));
-  Locator.add<WorkoutsService>(WorkoutsService());
+  Locator.add<WorkoutsService>(WorkoutsService(firestore: firestore));
 
   runApp(const MainApp());
 }
