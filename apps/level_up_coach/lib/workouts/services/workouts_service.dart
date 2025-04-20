@@ -8,12 +8,12 @@ import 'package:level_up_shared/level_up_shared.dart';
 class WorkoutsService {
   WorkoutsService({
     required FirebaseFirestore firestore,
-    required FirebaseStorage storage,
+    required FirebaseStorage workoutImagesStorage,
   }) : _firestore = firestore,
-       _storage = storage;
+       _workoutImagesStorage = workoutImagesStorage;
 
   final FirebaseFirestore _firestore;
-  final FirebaseStorage _storage;
+  final FirebaseStorage _workoutImagesStorage;
 
   // We retrieve the exercises of a given workout and add them to a stream
   // that updates the UI
@@ -85,9 +85,8 @@ class WorkoutsService {
   }
 
   Future<void> uploadWorkoutImage(String workoutId, Uint8List data) async {
-    final task = _storage
+    final task = _workoutImagesStorage
         .ref()
-        .child('workouts')
         .child(workoutId)
         .child('main_image.png')
         .putData(data, SettableMetadata(contentType: 'image/png'));
@@ -95,11 +94,8 @@ class WorkoutsService {
     final _ = await task;
   }
 
-  Future<String> getWorkoutImageUrl(String workoutId) {
-    return _storage
-        .ref()
-        .child('workouts/$workoutId/main_image.png')
-        .getDownloadURL();
+  String getWorkoutImageUrl(String workoutId) {
+    return 'https://storage.googleapis.com/workout-images/$workoutId/main_image.png';
   }
 
   void dispose() {

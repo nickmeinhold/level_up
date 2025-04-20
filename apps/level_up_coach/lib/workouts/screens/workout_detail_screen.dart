@@ -4,7 +4,6 @@ import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_coach/utils/locator.dart';
 import 'package:level_up_coach/workouts/services/workouts_service.dart';
@@ -134,21 +133,10 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                                   ),
                                 ),
                       ),
-                      FutureBuilder<String>(
-                        future: locate<WorkoutsService>().getWorkoutImageUrl(
+                      Image.network(
+                        locate<WorkoutsService>().getWorkoutImageUrl(
                           widget.workoutId,
                         ),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasError) {
-                            return Center(
-                              child: Text(snapshot.error.toString()),
-                            );
-                          }
-                          if (!snapshot.hasData) {
-                            return CircularProgressIndicator();
-                          }
-                          return Image.network(snapshot.data!);
-                        },
                       ),
                     ],
                   ),

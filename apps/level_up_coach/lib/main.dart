@@ -65,7 +65,9 @@ void main() async {
 
   // Setup the data layer of the "data layer architecture"
   final firestore = FirebaseFirestore.instance;
-  final storage = FirebaseStorage.instance;
+  final workoutImagesStorage = FirebaseStorage.instanceFor(
+    bucket: 'workout-images',
+  );
   final auth = FirebaseAuth.instance;
   // final cloudFunctions = FirebaseFunctions.instance;
 
@@ -76,7 +78,10 @@ void main() async {
   Locator.add<ConversationsService>(ConversationsService(firestore: firestore));
   Locator.add<ProfileService>(ProfileService(auth: auth, firestore: firestore));
   Locator.add<WorkoutsService>(
-    WorkoutsService(firestore: firestore, storage: storage),
+    WorkoutsService(
+      firestore: firestore,
+      workoutImagesStorage: workoutImagesStorage,
+    ),
   );
 
   runApp(const MainApp());
