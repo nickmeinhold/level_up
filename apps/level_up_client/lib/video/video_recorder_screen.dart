@@ -1,14 +1,11 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:camera/camera.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:level_up/auth/auth_service.dart';
 import 'package:level_up/utils/locator.dart';
-import 'package:path/path.dart' as path;
+import 'package:level_up/video/video_service.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:path/path.dart' as path;
 
 class VideoRecorderScreen extends StatefulWidget {
   const VideoRecorderScreen({super.key});
@@ -23,7 +20,6 @@ class _VideoRecorderScreenState extends State<VideoRecorderScreen> {
   bool _isRecording = false;
   bool _isUploading = false;
   String? _videoPath;
-  double _uploadProgress = 0;
   List<CameraDescription> _cameras = <CameraDescription>[];
 
   @override
@@ -89,54 +85,13 @@ class _VideoRecorderScreenState extends State<VideoRecorderScreen> {
     setState(() => _isUploading = true);
 
     try {
-      final File videoFile = File(_videoPath!);
-      final String fileName = path.basename(_videoPath!);
-      final String userId = locate<AuthService>().currentUserId!;
-
-      final Reference storageRef = FirebaseStorage.instance.ref().child(
-        'client_videos/$userId/$fileName',
-      );
-
-      final UploadTask uploadTask = storageRef.putFile(
-        videoFile,
-        SettableMetadata(
-          contentType: 'video/mp4',
-          customMetadata: {
-            'uploaded_by': userId,
-            'uploaded_at': DateTime.now().toString(),
-          },
-        ),
-      );
-
-      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-        log('bytesTransferred: ${snapshot.bytesTransferred}');
-        log('totalBytes: ${snapshot.totalBytes}');
-        setState(() {
-          _uploadProgress = snapshot.bytesTransferred / snapshot.totalBytes;
-        });
-      });
-
-      await uploadTask.whenComplete(() => null);
-
-      final String downloadUrl = await storageRef.getDownloadURL();
+      await locate<VideoService>().uploadVideo(_videoPath!);
 
       if (mounted) {
         ScaffoldMessenger.of(
           context,
         ).showSnackBar(SnackBar(content: Text('Video uploaded successfully!')));
       }
-      // Save the downloadUrl to Firestore as a message
-      await FirebaseFirestore.instance
-          .collection('conversations')
-          .doc(userId)
-          .collection('messages')
-          .add({
-            'videoUrl': downloadUrl,
-            'authorId': userId,
-            'timestamp': FieldValue.serverTimestamp(),
-            'read': false,
-            'type': 'video',
-          });
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(
@@ -172,18 +127,30 @@ class _VideoRecorderScreenState extends State<VideoRecorderScreen> {
               children: [
                 CameraPreview(_controller),
                 if (_isUploading)
-                  Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CircularProgressIndicator(value: _uploadProgress),
-                        SizedBox(height: 16),
-                        Text(
-                          'Uploading: ${(_uploadProgress * 100).toStringAsFixed(1)}%',
-                          style: TextStyle(color: Colors.white),
+                  StreamBuilder<double>(
+                    stream: locate<VideoService>().uploadProgressStream,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Center(child: Text(snapshot.error.toString()));
+                      }
+                      if (!snapshot.hasData) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      double uploadProgress = snapshot.data!;
+                      return Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CircularProgressIndicator(value: uploadProgress),
+                            SizedBox(height: 16),
+                            Text(
+                              'Uploading: ${(uploadProgress * 100).toStringAsFixed(1)}%',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
               ],
             );

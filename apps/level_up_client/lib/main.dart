@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up/auth/auth_service.dart';
@@ -11,6 +12,7 @@ import 'package:level_up/onboarding/free_workout/terms_and_conditions_screen.dar
 import 'package:level_up/onboarding/opening_screen.dart';
 import 'package:level_up/utils/locator.dart';
 import 'package:level_up/video/video_recorder_screen.dart';
+import 'package:level_up/video/video_service.dart';
 import 'package:level_up/workout/exercises/exercise_details_screen.dart';
 import 'package:level_up/workout/exercises/widgets/time_up_screen.dart';
 import 'package:level_up/workout/services/workouts_service.dart';
@@ -89,15 +91,18 @@ void main() async {
 
   // Setup the data layer of the "data layer architecture"
   final firestore = FirebaseFirestore.instance;
-  // final clientFormVideosStorage = FirebaseStorage.instanceFor(
-  //   bucket: 'client-form-videos',
-  // );
+  final clientFormVideosStorage = FirebaseStorage.instanceFor(
+    bucket: 'client-form-videos',
+  );
   final auth = FirebaseAuth.instance;
   // final cloudFunctions = FirebaseFunctions.instance;
 
   // The services make up the repositories layer of the "data layer architecture"
   Locator.add<AuthService>(AuthService(auth: auth, firestore: firestore));
   Locator.add<WorkoutsService>(WorkoutsService(firestore: firestore));
+  Locator.add<VideoService>(
+    VideoService(clientFormVideosStorage: clientFormVideosStorage, auth: auth),
+  );
 
   runApp(const MainApp());
 }

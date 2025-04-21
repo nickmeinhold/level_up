@@ -17,7 +17,6 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
   int _currentStep = 0;
   late Workout _workout;
   bool _loadingWorkout = true;
-  bool _loadingExercises = true;
 
   Future<void> _loadWorkout() async {
     _workout = await locate<WorkoutsService>().retrieveWorkout(
