@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "esModuleInterop": true,
-    "moduleResolution": "nodenext",
+    "module": "commonjs",
     "noImplicitReturns": true,
+    "esModuleInterop": true,
     "noUnusedLocals": true,
     "outDir": "lib",
     "sourceMap": true,
