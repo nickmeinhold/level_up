@@ -4,3 +4,7 @@ export 'src/chat/text_message_view.dart';
 export 'src/chat/video_message_view.dart';
 export 'src/workouts/models/workout.dart';
 export 'src/workouts/models/exercise.dart';
+export 'src/profile/profile_service.dart';
+export 'src/profile/edit_profile_pic_screen.dart';
+export 'src/utils/locator.dart';
+export 'src/utils/enums/pic_size.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 
 class TextMessageView extends StatelessWidget {
   const TextMessageView({
@@ -26,7 +27,12 @@ class TextMessageView extends StatelessWidget {
           if (!isMe)
             CircleAvatar(
               backgroundColor: Colors.grey,
-              child: Icon(Icons.person),
+              backgroundImage: NetworkImage(
+                locate<ProfileService>().getProfilePicUrlForUser(
+                  size: PicSize.small,
+                  userId: authorId,
+                ),
+              ),
             ),
           SizedBox(width: 8.0),
           Flexible(
@@ -54,7 +60,9 @@ class TextMessageView extends StatelessWidget {
           if (isMe)
             CircleAvatar(
               backgroundColor: Theme.of(context).primaryColor,
-              child: Icon(Icons.person),
+              backgroundImage: NetworkImage(
+                locate<ProfileService>().getProfilePicUrl(PicSize.small),
+              ),
             ),
         ],
       ),

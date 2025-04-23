@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoMessageView extends StatefulWidget {
@@ -50,7 +51,12 @@ class _VideoMessageViewState extends State<VideoMessageView> {
           if (!isMe)
             CircleAvatar(
               backgroundColor: Colors.grey,
-              child: Icon(Icons.person),
+              backgroundImage: NetworkImage(
+                locate<ProfileService>().getProfilePicUrlForUser(
+                  size: PicSize.small,
+                  userId: widget.authorId,
+                ),
+              ),
             ),
           SizedBox(width: 8.0),
           Flexible(
@@ -102,7 +108,9 @@ class _VideoMessageViewState extends State<VideoMessageView> {
           if (isMe)
             CircleAvatar(
               backgroundColor: Theme.of(context).primaryColor,
-              child: Icon(Icons.person),
+              backgroundImage: NetworkImage(
+                locate<ProfileService>().getProfilePicUrl(PicSize.small),
+              ),
             ),
         ],
       ),
