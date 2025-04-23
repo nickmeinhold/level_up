@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:level_up_coach/profile/models/client.dart';
 
-class ProfileService {
-  ProfileService({
+class CoachProfileService {
+  CoachProfileService({
     required FirebaseAuth auth,
     required FirebaseFirestore firestore,
   }) : _auth = auth,
@@ -23,7 +23,7 @@ class ProfileService {
     return coachDoc.exists;
   }
 
-  Future<bool> hasPendingApplication() async {
+  Future<bool> hasPendingCoachApplication() async {
     // Check for pending application
     if (_auth.currentUser == null) throw 'User was null';
     final applicationDoc =

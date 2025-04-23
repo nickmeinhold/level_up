@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:go_router/go_router.dart';
+import 'package:level_up_coach/profile/coach_profile_service.dart';
 import 'package:level_up_coach/workouts/screens/create_exercise_screen.dart';
 import 'package:level_up_coach/workouts/screens/workout_detail_screen.dart';
 import 'package:level_up_coach/workouts/services/workouts_service.dart';
@@ -13,8 +14,6 @@ import 'package:level_up_coach/auth/auth_service.dart';
 import 'package:level_up_coach/auth/sign_in_screen.dart';
 import 'package:level_up_coach/conversations/services/conversations_service.dart';
 import 'package:level_up_coach/home_screen.dart';
-import 'package:level_up_coach/profile/profile_service.dart';
-import 'package:level_up_coach/utils/locator.dart';
 import 'firebase_options.dart';
 
 final _router = GoRouter(
@@ -56,6 +55,10 @@ final _router = GoRouter(
             workoutId: state.pathParameters['workoutId']!,
           ),
     ),
+    GoRoute(
+      path: '/edit-profile-pic',
+      builder: (context, state) => const EditProfilePicScreen(),
+    ),
   ],
 );
 
@@ -68,6 +71,9 @@ void main() async {
   final workoutImagesStorage = FirebaseStorage.instanceFor(
     bucket: 'workout-images',
   );
+  final profilePicStorage = FirebaseStorage.instanceFor(
+    bucket: 'lu-profile-pics',
+  );
   final auth = FirebaseAuth.instance;
   // final cloudFunctions = FirebaseFunctions.instance;
 
@@ -76,7 +82,16 @@ void main() async {
     AuthService(firebaseAuth: auth, firestore: firestore),
   );
   Locator.add<ConversationsService>(ConversationsService(firestore: firestore));
-  Locator.add<ProfileService>(ProfileService(auth: auth, firestore: firestore));
+  Locator.add<CoachProfileService>(
+    CoachProfileService(auth: auth, firestore: firestore),
+  );
+  Locator.add<ProfileService>(
+    ProfileService(
+      auth: auth,
+      firestore: firestore,
+      profilePicStorage: profilePicStorage,
+    ),
+  );
   Locator.add<WorkoutsService>(
     WorkoutsService(
       firestore: firestore,

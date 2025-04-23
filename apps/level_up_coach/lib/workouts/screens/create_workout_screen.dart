@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:level_up_coach/utils/locator.dart';
 import 'package:level_up_coach/workouts/services/workouts_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 
@@ -14,13 +13,11 @@ class CreateWorkoutScreen extends StatefulWidget {
 class _CreateWorkoutScreenState extends State<CreateWorkoutScreen> {
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
-  final _imageUrlController = TextEditingController();
   final List<String> _exerciseIds = [];
 
   @override
   void dispose() {
     _descriptionController.dispose();
-    _imageUrlController.dispose();
     super.dispose();
   }
 
@@ -30,7 +27,6 @@ class _CreateWorkoutScreenState extends State<CreateWorkoutScreen> {
         final workout = Workout(
           id: '', // Firestore will generate ID
           description: _descriptionController.text,
-          imageUrl: _imageUrlController.text,
           exerciseIds: [],
         );
 
@@ -73,20 +69,6 @@ class _CreateWorkoutScreenState extends State<CreateWorkoutScreen> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a workout description';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _imageUrlController,
-                decoration: const InputDecoration(
-                  labelText: 'Image Url',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the image URL';
                   }
                   return null;
                 },

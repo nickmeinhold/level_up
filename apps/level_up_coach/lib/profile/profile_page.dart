@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_coach/auth/auth_service.dart';
-import 'package:level_up_coach/profile/profile_service.dart';
-import 'package:level_up_coach/utils/locator.dart';
+import 'package:level_up_coach/profile/coach_profile_service.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -27,7 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> _checkCoachStatus() async {
-    _isCoach = await locate<ProfileService>().isCoach();
+    _isCoach = await locate<CoachProfileService>().isCoach();
 
     if (_isCoach) {
       setState(() {
@@ -38,7 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     _hasPendingApplication =
-        await locate<ProfileService>().hasPendingApplication();
+        await locate<CoachProfileService>().hasPendingCoachApplication();
     if (_hasPendingApplication) {
       setState(() {
         _isLoading = false;
@@ -57,7 +57,7 @@ class _ProfilePageState extends State<ProfilePage> {
     });
 
     try {
-      await locate<ProfileService>().applyToBeCoach();
+      await locate<CoachProfileService>().applyToBeCoach();
 
       setState(() {
         _hasPendingApplication = true;
@@ -96,7 +96,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 CircleAvatar(
                   radius: 60,
                   backgroundImage: NetworkImage(
-                    'https://picsum.photos/id/1012/200',
+                    locate<ProfileService>().getProfilePicUrl(PicSize.small),
                   ),
                 ),
                 CircleAvatar(
@@ -105,10 +105,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: IconButton(
                     icon: Icon(Icons.camera_alt, size: 18, color: Colors.white),
                     onPressed: () {
-                      // Handle profile picture update
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Update profile picture')),
-                      );
+                      context.push('/edit-profile-pic');
                     },
                   ),
                 ),

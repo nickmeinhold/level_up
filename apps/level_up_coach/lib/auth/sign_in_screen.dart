@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_coach/auth/auth_service.dart';
 import 'package:level_up_coach/utils/icons/custom_icons.dart';
-import 'package:level_up_coach/utils/locator.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});

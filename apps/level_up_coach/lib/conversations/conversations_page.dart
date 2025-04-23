@@ -4,7 +4,7 @@ import 'package:level_up_coach/auth/auth_service.dart';
 import 'package:level_up_coach/conversations/conversation_list_item.dart';
 import 'package:level_up_coach/conversations/models/conversation.dart';
 import 'package:level_up_coach/conversations/services/conversations_service.dart';
-import 'package:level_up_coach/utils/locator.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 
 class ConversationsPage extends StatelessWidget {
   const ConversationsPage({super.key});

@@ -4,7 +4,6 @@ class Conversation {
   final String id;
   final String name;
   final String lastMessage;
-  final String? avatarUrl;
   final Timestamp timestamp;
   final int unreadCount;
 
@@ -12,7 +11,6 @@ class Conversation {
     required this.id,
     required this.name,
     required this.lastMessage,
-    required this.avatarUrl,
     required this.timestamp,
     required this.unreadCount,
   });
@@ -22,7 +20,6 @@ class Conversation {
       id: json['id'] as String,
       name: json['name'] as String,
       lastMessage: json['lastMessage'] as String,
-      avatarUrl: json['avatarUrl'] as String?,
       timestamp: json['timestamp'] as Timestamp,
       unreadCount: json['unreadCount'] as int,
     );
@@ -33,7 +30,6 @@ class Conversation {
       'id': id,
       'name': name,
       'lastMessage': lastMessage,
-      'avatarUrl': avatarUrl,
       'timestamp': timestamp,
       'unreadCount': unreadCount,
     };

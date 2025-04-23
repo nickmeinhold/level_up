@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:level_up_coach/conversations/models/conversation.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class ConversationListItem extends StatelessWidget {
@@ -23,17 +24,23 @@ class ConversationListItem extends StatelessWidget {
           children: [
             Stack(
               children: [
-                conversation.avatarUrl == null
-                    ? CircleAvatar(
-                      radius: 28,
-                      backgroundColor: Colors.black,
-                      child: Icon(Icons.person, size: 28),
-                    )
-                    : CircleAvatar(
-                      radius: 28,
-                      backgroundImage: NetworkImage(conversation.avatarUrl!),
-                      child: Icon(Icons.person, size: 28),
+                CircleAvatar(
+                  radius: 28,
+                  backgroundColor: Colors.black,
+                  child: Image.network(
+                    locate<ProfileService>().getProfilePicUrlForUser(
+                      size: PicSize.small,
+                      userId: conversation.id,
                     ),
+                    fit: BoxFit.cover,
+                    width: 56,
+                    height: 56,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Icon(Icons.person, size: 20, color: Colors.grey);
+                    },
+                  ),
+                ),
+
                 if (conversation.unreadCount > 0)
                   Positioned(
                     right: 0,

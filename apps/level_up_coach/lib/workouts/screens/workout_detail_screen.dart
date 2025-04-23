@@ -5,7 +5,6 @@ import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:level_up_coach/utils/locator.dart';
 import 'package:level_up_coach/workouts/services/workouts_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 

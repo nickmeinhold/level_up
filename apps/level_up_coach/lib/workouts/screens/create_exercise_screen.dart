@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:level_up_coach/utils/locator.dart';
 import 'package:level_up_coach/workouts/services/workouts_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 import 'record_video_screen.dart';

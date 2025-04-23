@@ -48,7 +48,7 @@ class WorkoutsService {
         _firestore.collection('workouts').doc(streamId).snapshots();
 
     return docSnapshotStream.map<Workout>((docSnapshot) {
-      return Workout.fromJsonWthId(docSnapshot.id, docSnapshot.data() ?? {});
+      return Workout.fromJsonWithId(docSnapshot.id, docSnapshot.data() ?? {});
     });
   }
 
@@ -61,7 +61,7 @@ class WorkoutsService {
 
     return querySnapshotStream.map<List<Workout>>((querySnapshot) {
       return querySnapshot.docs.map((docSnapshot) {
-        return Workout.fromJsonWthId(docSnapshot.id, docSnapshot.data());
+        return Workout.fromJsonWithId(docSnapshot.id, docSnapshot.data());
       }).toList();
     });
   }
