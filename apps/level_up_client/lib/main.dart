@@ -10,7 +10,6 @@ import 'package:level_up/main_screen.dart';
 import 'package:level_up/onboarding/free_workout/name_screen.dart';
 import 'package:level_up/onboarding/free_workout/terms_and_conditions_screen.dart';
 import 'package:level_up/onboarding/opening_screen.dart';
-import 'package:level_up/utils/locator.dart';
 import 'package:level_up/video/video_recorder_screen.dart';
 import 'package:level_up/video/video_service.dart';
 import 'package:level_up/workout/exercises/exercise_details_screen.dart';
@@ -18,6 +17,7 @@ import 'package:level_up/workout/exercises/widgets/time_up_screen.dart';
 import 'package:level_up/workout/services/workouts_service.dart';
 import 'package:level_up/workout/workout_details_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 import 'firebase_options.dart';
 
 final _router = GoRouter(
@@ -82,6 +82,10 @@ final _router = GoRouter(
       path: '/video-form',
       builder: (context, state) => const VideoRecorderScreen(),
     ),
+    GoRoute(
+      path: '/edit-profile-pic',
+      builder: (context, state) => const EditProfilePicScreen(),
+    ),
   ],
 );
 
@@ -94,6 +98,9 @@ void main() async {
   final clientFormVideosStorage = FirebaseStorage.instanceFor(
     bucket: 'client-form-videos',
   );
+  final profilePicStorage = FirebaseStorage.instanceFor(
+    bucket: 'lu-profile-pics',
+  );
   final auth = FirebaseAuth.instance;
   // final cloudFunctions = FirebaseFunctions.instance;
 
@@ -102,6 +109,13 @@ void main() async {
   Locator.add<WorkoutsService>(WorkoutsService(firestore: firestore));
   Locator.add<VideoService>(
     VideoService(clientFormVideosStorage: clientFormVideosStorage, auth: auth),
+  );
+  Locator.add<ProfileService>(
+    ProfileService(
+      profilePicStorage: profilePicStorage,
+      firestore: firestore,
+      auth: auth,
+    ),
   );
 
   runApp(const MainApp());

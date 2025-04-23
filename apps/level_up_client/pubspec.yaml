@@ -15,7 +15,7 @@ dependencies:
   firebase_storage: ^12.4.4
   flutter:
     sdk: flutter
-  go_router: ^14.8.1
+  go_router: ^15.0.0
   google_sign_in: ^6.3.0
   level_up_shared:
     path: ../level_up_shared

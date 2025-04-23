@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up/auth/auth_service.dart';
-import 'package:level_up/utils/locator.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -33,7 +33,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 CircleAvatar(
                   radius: 60,
                   backgroundImage: NetworkImage(
-                    'https://picsum.photos/id/1012/200',
+                    locate<ProfileService>().getProfilePicUrl(PicSize.small),
                   ),
                 ),
                 CircleAvatar(
@@ -42,10 +42,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: IconButton(
                     icon: Icon(Icons.camera_alt, size: 18, color: Colors.white),
                     onPressed: () {
-                      // Handle profile picture update
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Update profile picture')),
-                      );
+                      context.push('/edit-profile-pic');
                     },
                   ),
                 ),

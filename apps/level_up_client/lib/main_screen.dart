@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:level_up/auth/auth_service.dart';
-import 'package:level_up/utils/locator.dart';
 import 'package:level_up/profile/profile_page.dart';
 import 'package:level_up/workout/workout_page.dart';
 import 'package:level_up_shared/level_up_shared.dart';

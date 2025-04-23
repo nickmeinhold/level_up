@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up/auth/auth_service.dart';
-import 'package:level_up/utils/locator.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 
 class NameScreen extends StatefulWidget {
   const NameScreen({super.key});
