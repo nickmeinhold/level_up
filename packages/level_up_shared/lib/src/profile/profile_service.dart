@@ -11,8 +11,8 @@ import 'package:level_up_shared/src/utils/enums/pic_size.dart';
 class ProfileService {
   ProfileService({
     required FirebaseStorage profilePicStorage,
-    required FirebaseFirestore firestore,
     required FirebaseAuth auth,
+    required FirebaseFirestore firestore,
   }) : _profilePicStorage = profilePicStorage,
        _firestore = firestore,
        _auth = auth;
@@ -95,5 +95,11 @@ class ProfileService {
       PicSize.large =>
         'https://storage.googleapis.com/lu-profile-pics/$userId/profile_large.jpg',
     };
+  }
+
+  Future<void> updateName(String name) {
+    return _firestore.collection('profiles').doc(_auth.currentUser!.uid).set({
+      'name': name,
+    }, SetOptions(merge: true));
   }
 }
