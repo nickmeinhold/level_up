@@ -12,18 +12,18 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final TextEditingController _nameController = TextEditingController(
-    text: 'John Doe',
-  );
+  final TextEditingController _nameController = TextEditingController(text: '');
 
   bool _isLoading = true;
   bool _isCoach = false;
   bool _hasPendingApplication = false;
+  bool _nameChanged = false;
 
   @override
   void initState() {
     super.initState();
     _checkCoachStatus();
+    _retrieveUserDetails();
   }
 
   Future<void> _checkCoachStatus() async {
@@ -79,6 +79,11 @@ class _ProfilePageState extends State<ProfilePage> {
         );
       }
     }
+  }
+
+  Future<void> _retrieveUserDetails() async {
+    Coach coach = await locate<CoachProfileService>().retrieveCoachUser();
+    _nameController.text = coach.name;
   }
 
   @override
@@ -162,13 +167,38 @@ class _ProfilePageState extends State<ProfilePage> {
           SizedBox(height: 24.0),
 
           // Name field
-          TextField(
-            controller: _nameController,
-            decoration: InputDecoration(
-              labelText: 'Name',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.person),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _nameChanged = true;
+                    });
+                  },
+                ),
+              ),
+              IconButton(
+                onPressed:
+                    (_nameChanged)
+                        ? () {
+                          locate<ProfileService>().updateName(
+                            _nameController.text,
+                          );
+                          setState(() {
+                            _nameChanged = false;
+                          });
+                        }
+                        : null,
+                icon: Icon(Icons.save),
+              ),
+            ],
           ),
           SizedBox(height: 16.0),
 

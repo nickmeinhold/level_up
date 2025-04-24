@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:level_up_coach/profile/models/client.dart';
+import 'package:level_up_shared/level_up_shared.dart';
 
 class CoachProfileService {
   CoachProfileService({
@@ -60,7 +60,7 @@ class CoachProfileService {
     }
   }
 
-  Future<Client> retrieveClient() async {
+  Future<Coach> retrieveCoachUser() async {
     if (_auth.currentUser == null) {
       throw Exception(
         'The user must be signed in and onboarded before retrieving a Client.',
@@ -70,6 +70,6 @@ class CoachProfileService {
     final DocumentSnapshot<Map<String, dynamic>> snapshot =
         await _firestore.doc('profiles/${_auth.currentUser!.uid}').get();
 
-    return Client.fromJsonWithId(id: snapshot.id, json: snapshot.data() ?? {});
+    return Coach.fromJsonWithId(snapshot.id, snapshot.data() ?? {});
   }
 }
