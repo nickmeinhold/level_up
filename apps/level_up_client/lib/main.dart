@@ -10,6 +10,7 @@ import 'package:level_up/main_screen.dart';
 import 'package:level_up/onboarding/free_workout/name_screen.dart';
 import 'package:level_up/onboarding/free_workout/terms_and_conditions_screen.dart';
 import 'package:level_up/onboarding/opening_screen.dart';
+import 'package:level_up/profile/client_profile_service.dart';
 import 'package:level_up/video/video_recorder_screen.dart';
 import 'package:level_up/video/video_service.dart';
 import 'package:level_up/workout/exercises/exercise_details_screen.dart';
@@ -116,6 +117,9 @@ void main() async {
       firestore: firestore,
       auth: auth,
     ),
+  );
+  Locator.add<ClientProfileService>(
+    ClientProfileService(auth: auth, firestore: firestore),
   );
 
   runApp(const MainApp());

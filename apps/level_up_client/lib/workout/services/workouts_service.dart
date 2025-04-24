@@ -34,17 +34,16 @@ class WorkoutsService {
   }
 
   Future<List<Exercise>> retrieveExercises(List<String> exerciseIds) async {
-    List<DocumentSnapshot<Map<String, Object?>>> docSnapshots =
-        await Future.wait(
-          exerciseIds.map((exerciseId) {
-            return _firestore.collection('exercises').doc(exerciseId).get();
-          }),
-        );
+    final QuerySnapshot<Map<String, dynamic>> querySnapshot =
+        await FirebaseFirestore.instance
+            .collection('exercises')
+            .where(FieldPath.documentId, whereIn: exerciseIds)
+            .get();
 
     List<Exercise> exercises = [];
-    for (final docSnapshot in docSnapshots) {
+    for (final docSnapshot in querySnapshot.docs) {
       exercises.add(
-        Exercise.fromJsonWithId(docSnapshot.id, docSnapshot.data() ?? {}),
+        Exercise.fromJsonWithId(docSnapshot.id, docSnapshot.data()),
       );
     }
 

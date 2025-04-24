@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up/auth/auth_service.dart';
+import 'package:level_up/profile/client_profile_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -11,12 +12,23 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final TextEditingController _nameController = TextEditingController(
-    text: 'John Doe',
-  );
+  final TextEditingController _nameController = TextEditingController(text: '');
   final TextEditingController _emailController = TextEditingController(
-    text: 'john.doe@example.com',
+    text: '',
   );
+
+  bool _nameChanged = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _retrieveUserDetails();
+  }
+
+  Future<void> _retrieveUserDetails() async {
+    Client client = await locate<ClientProfileService>().retrieveClientUser();
+    _nameController.text = client.name;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,14 +63,38 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           SizedBox(height: 24.0),
 
-          // Name field
-          TextField(
-            controller: _nameController,
-            decoration: InputDecoration(
-              labelText: 'Name',
-              border: OutlineInputBorder(),
-              prefixIcon: Icon(Icons.person),
-            ),
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _nameController,
+                  decoration: InputDecoration(
+                    labelText: 'Name',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.person),
+                  ),
+                  onChanged: (value) {
+                    setState(() {
+                      _nameChanged = true;
+                    });
+                  },
+                ),
+              ),
+              IconButton(
+                onPressed:
+                    (_nameChanged)
+                        ? () {
+                          locate<ProfileService>().updateName(
+                            _nameController.text,
+                          );
+                          setState(() {
+                            _nameChanged = false;
+                          });
+                        }
+                        : null,
+                icon: Icon(Icons.save),
+              ),
+            ],
           ),
           SizedBox(height: 16.0),
 
