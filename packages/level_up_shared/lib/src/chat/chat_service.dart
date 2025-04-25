@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:level_up_shared/src/chat/chat_message.dart';
 
@@ -6,23 +8,67 @@ class ChatService {
 
   final FirebaseFirestore _firestore;
 
-  Stream<List<ChatMessage>> getMessagesStream({
-    required String conversationId,
-  }) {
-    return _firestore
+  final List<ChatMessage> _messages = [];
+  StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _streamSubscription;
+  DocumentSnapshot? _lastSnapshot;
+
+  final _messagesStreamController =
+      StreamController<List<ChatMessage>>.broadcast();
+  Stream<List<ChatMessage>> get messagesListStream =>
+      _messagesStreamController.stream;
+
+  void startListeningForLatestMessage(String conversationId) {
+    _messages.clear();
+    _lastSnapshot = null;
+
+    _streamSubscription = _firestore
         .collection('conversations')
         .doc(conversationId)
         .collection('messages')
         .orderBy('timestamp', descending: true)
-        .limit(10)
+        .limit(1)
         .snapshots()
-        .map<List<ChatMessage>>((QuerySnapshot<Map<String, dynamic>> snapshot) {
+        .listen((snapshot) {
           List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
               snapshot.docs;
-          return docs.map<ChatMessage>((snapshot) {
-            QueryDocumentSnapshot<Map<String, dynamic>> doc = snapshot;
-            return ChatMessage.fromJsonWithId(doc.id, doc.data());
-          }).toList();
+          if (docs.isNotEmpty) {
+            _lastSnapshot ??= docs.first;
+            if (_messages.isEmpty || _messages.first.id != docs.first.id) {
+              _messages.insert(
+                0,
+                ChatMessage.fromJsonWithId(docs.first.id, docs.first.data()),
+              );
+              _messagesStreamController.add(_messages);
+            }
+          }
+        });
+  }
+
+  void stopListeningForLatestMessage() {
+    _streamSubscription?.cancel();
+  }
+
+  void retrievePreviousMessages(String conversationId) {
+    if (_lastSnapshot == null) return;
+
+    _streamSubscription = _firestore
+        .collection('conversations')
+        .doc(conversationId)
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .startAfterDocument(_lastSnapshot!)
+        .limit(10)
+        .snapshots()
+        .listen((snapshot) {
+          if (snapshot.docs.isNotEmpty) {
+            List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
+                snapshot.docs;
+            for (final doc in docs) {
+              _messages.add(ChatMessage.fromJsonWithId(doc.id, doc.data()));
+            }
+            _lastSnapshot = docs.last;
+            _messagesStreamController.add(_messages);
+          }
         });
   }
 

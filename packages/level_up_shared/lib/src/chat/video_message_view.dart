@@ -60,48 +60,36 @@ class _VideoMessageViewState extends State<VideoMessageView> {
             ),
           SizedBox(width: 8.0),
           Flexible(
-            child: Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.7,
-              ),
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
-              decoration: BoxDecoration(
-                color: isMe ? Theme.of(context).primaryColor : Colors.grey[200],
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                  bottomLeft: isMe ? Radius.circular(16) : Radius.circular(4),
-                  bottomRight: isMe ? Radius.circular(4) : Radius.circular(16),
-                ),
-              ),
-              child: Center(
-                child:
-                    _controller.value.isInitialized
-                        ? Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            AspectRatio(
-                              aspectRatio: _controller.value.aspectRatio,
+            child: Center(
+              child:
+                  _controller.value.isInitialized
+                      ? Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          AspectRatio(
+                            aspectRatio: _controller.value.aspectRatio,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
                               child: VideoPlayer(_controller),
                             ),
-                            IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  _controller.value.isPlaying
-                                      ? _controller.pause()
-                                      : _controller.play();
-                                });
-                              },
-                              icon: Icon(
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
                                 _controller.value.isPlaying
-                                    ? Icons.pause
-                                    : Icons.play_arrow,
-                              ),
+                                    ? _controller.pause()
+                                    : _controller.play();
+                              });
+                            },
+                            icon: Icon(
+                              _controller.value.isPlaying
+                                  ? Icons.pause
+                                  : Icons.play_arrow,
                             ),
-                          ],
-                        )
-                        : Container(),
-              ),
+                          ),
+                        ],
+                      )
+                      : Container(),
             ),
           ),
           SizedBox(width: 8.0),

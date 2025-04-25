@@ -25,13 +25,23 @@ class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    locate<ChatService>().startListeningForLatestMessage(widget.conversationId);
+  }
+
+  @override
+  void dispose() {
+    locate<ChatService>().stopListeningForLatestMessage();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Chat')),
       body: StreamBuilder<List<ChatMessage>>(
-        stream: locate<ChatService>().getMessagesStream(
-          conversationId: widget.conversationId,
-        ),
+        stream: locate<ChatService>().messagesListStream,
         builder: (context, snapshot) {
           if (snapshot.error != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -57,11 +67,18 @@ class _ChatPageState extends State<ChatPage> {
                           reverse: true,
                           itemCount: messages.length,
                           itemBuilder: (context, index) {
+                            if (index == messages.length - 1) {}
                             ChatMessage message = messages[index];
+                            // if a coach sees the message, mark as read
                             if (widget.isCoach) {
                               locate<ChatService>().setMessageToRead(
                                 widget.conversationId,
                                 message,
+                              );
+                            }
+                            if (index == messages.length - 1) {
+                              locate<ChatService>().retrievePreviousMessages(
+                                widget.conversationId,
                               );
                             }
                             switch (message) {
