@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:level_up_shared/src/chat/chat_message.dart';
+import 'package:level_up_shared/src/chat/chat_service.dart';
 import 'package:level_up_shared/src/chat/text_message_view.dart';
 import 'package:level_up_shared/src/chat/video_message_view.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:level_up_shared/src/utils/locator.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({
     super.key,
+    this.isCoach = false,
     required this.currentUserId,
     required this.conversationId,
   });
 
+  final bool isCoach;
   final String currentUserId;
   final String conversationId;
 
@@ -21,58 +24,14 @@ class ChatPage extends StatefulWidget {
 class _ChatPageState extends State<ChatPage> {
   final TextEditingController _messageController = TextEditingController();
 
-  Future<void> _send({
-    required String message,
-    required String conversationId,
-    required String authorId,
-  }) async {
-    await FirebaseFirestore.instance
-        .collection('conversations')
-        .doc(conversationId)
-        .set({
-          'lastMessage': message,
-          'timestamp': FieldValue.serverTimestamp(),
-        }, SetOptions(merge: true));
-
-    DocumentReference<Map<String, dynamic>> _ = await FirebaseFirestore.instance
-        .collection('conversations')
-        .doc(conversationId)
-        .collection('messages')
-        .add({
-          'authorId': authorId,
-          'message': message,
-          'type': 'text',
-          'timestamp': FieldValue.serverTimestamp(),
-          'read': false,
-        });
-  }
-
-  Stream<List<ChatMessage>> _getMessagesStream({
-    required String conversationId,
-  }) {
-    return FirebaseFirestore.instance
-        .collection('conversations')
-        .doc(conversationId)
-        .collection('messages')
-        .orderBy('timestamp', descending: true)
-        .limit(10)
-        .snapshots()
-        .map<List<ChatMessage>>((QuerySnapshot<Map<String, dynamic>> snapshot) {
-          List<QueryDocumentSnapshot<Map<String, dynamic>>> docs =
-              snapshot.docs;
-          return docs.map<ChatMessage>((snapshot) {
-            QueryDocumentSnapshot<Map<String, dynamic>> doc = snapshot;
-            return ChatMessage.fromJsonWithId(doc.id, doc.data());
-          }).toList();
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Chat')),
       body: StreamBuilder<List<ChatMessage>>(
-        stream: _getMessagesStream(conversationId: widget.conversationId),
+        stream: locate<ChatService>().getMessagesStream(
+          conversationId: widget.conversationId,
+        ),
         builder: (context, snapshot) {
           if (snapshot.error != null) {
             WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -99,6 +58,12 @@ class _ChatPageState extends State<ChatPage> {
                           itemCount: messages.length,
                           itemBuilder: (context, index) {
                             ChatMessage message = messages[index];
+                            if (widget.isCoach) {
+                              locate<ChatService>().setMessageToRead(
+                                widget.conversationId,
+                                message,
+                              );
+                            }
                             switch (message) {
                               case TextChatMessage():
                                 return TextMessageView(
@@ -154,7 +119,7 @@ class _ChatPageState extends State<ChatPage> {
                       onPressed: () {
                         if (_messageController.text.trim().isNotEmpty) {
                           setState(() {
-                            _send(
+                            locate<ChatService>().send(
                               message: _messageController.text,
                               conversationId: widget.conversationId,
                               authorId: widget.currentUserId,
