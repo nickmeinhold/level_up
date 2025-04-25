@@ -37,6 +37,7 @@ final _router = GoRouter(
           (context, state) => ChatPage(
             conversationId: state.pathParameters['clientId']!,
             currentUserId: state.pathParameters['coachId']!,
+            isCoach: true,
           ),
     ),
     GoRoute(
@@ -98,6 +99,7 @@ void main() async {
       workoutImagesStorage: workoutImagesStorage,
     ),
   );
+  Locator.add<ChatService>(ChatService(firestore: firestore));
 
   runApp(const MainApp());
 }
