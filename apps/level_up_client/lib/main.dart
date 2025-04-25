@@ -121,6 +121,7 @@ void main() async {
   Locator.add<ClientProfileService>(
     ClientProfileService(auth: auth, firestore: firestore),
   );
+  Locator.add<ChatService>(ChatService(firestore: firestore));
 
   runApp(const MainApp());
 }
