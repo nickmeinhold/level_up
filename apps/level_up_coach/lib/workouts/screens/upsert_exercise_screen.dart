@@ -26,6 +26,7 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
   final _weightController = TextEditingController();
   final _repsController = TextEditingController();
   final _setsController = TextEditingController();
+  final _youtubeIdController = TextEditingController();
 
   ExerciseType _selectedType = ExerciseType.timed;
   String? _videoUrl;
@@ -53,6 +54,7 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
     _weightController.dispose();
     _repsController.dispose();
     _setsController.dispose();
+    _youtubeIdController.dispose();
     super.dispose();
   }
 
@@ -68,6 +70,7 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
         _titleController.text = exercise.title;
         _subtitleController.text = exercise.subtitle;
         _descriptionController.text = exercise.description;
+        _youtubeIdController.text = exercise.youtubeId ?? '';
         switch (exercise) {
           case TimedExercise():
             _timeController.text = exercise.time.toString();
@@ -94,6 +97,10 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
           ExerciseType.reps => RepsExercise(
             id: widget.exerciseId ?? '',
             videoUrl: _videoUrl,
+            youtubeId:
+                _youtubeIdController.text == ''
+                    ? null
+                    : _youtubeIdController.text,
             title: _titleController.text,
             subtitle: _subtitleController.text,
             description: _descriptionController.text,
@@ -103,6 +110,10 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
           ExerciseType.timed => TimedExercise(
             id: widget.exerciseId ?? '',
             videoUrl: _videoUrl,
+            youtubeId:
+                _youtubeIdController.text == ''
+                    ? null
+                    : _youtubeIdController.text,
             title: _titleController.text,
             subtitle: _subtitleController.text,
             description: _descriptionController.text,
@@ -112,6 +123,10 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
           ExerciseType.repsWithWeight => RepsExerciseWithWeight(
             id: widget.exerciseId ?? '',
             videoUrl: _videoUrl,
+            youtubeId:
+                _youtubeIdController.text == ''
+                    ? null
+                    : _youtubeIdController.text,
             title: _titleController.text,
             subtitle: _subtitleController.text,
             description: _descriptionController.text,
@@ -359,20 +374,35 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
                             const SizedBox(height: 8),
                           ],
                         ),
-                      ElevatedButton.icon(
-                        icon: const Icon(Icons.videocam),
-                        label: const Text('Record Video'),
-                        onPressed: () async {
-                          final videoUrl = await context.push<String>(
-                            '/record-video',
-                          );
+                      Row(
+                        children: [
+                          ElevatedButton.icon(
+                            icon: const Icon(Icons.videocam),
+                            label: const Text('Record Video'),
+                            onPressed: () async {
+                              final videoUrl = await context.push<String>(
+                                '/record-video',
+                              );
 
-                          if (videoUrl != null) {
-                            setState(() {
-                              _videoUrl = videoUrl;
-                            });
-                          }
-                        },
+                              if (videoUrl != null) {
+                                setState(() {
+                                  _videoUrl = videoUrl;
+                                });
+                              }
+                            },
+                          ),
+                          const SizedBox(width: 24),
+                          Expanded(
+                            child: TextFormField(
+                              controller: _youtubeIdController,
+                              decoration: const InputDecoration(
+                                labelText: 'Youtube ID',
+                                border: OutlineInputBorder(),
+                              ),
+                              keyboardType: TextInputType.text,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),

@@ -87,6 +87,31 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
         }
 
         Workout workout = snapshot.data!;
+
+        if (workout.exerciseIds.isEmpty) {
+          return Scaffold(
+            appBar: AppBar(title: Text(workout.description)),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('No exercises yet'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      context.pushNamed<String>(
+                        'upsert-exercise',
+                        pathParameters: {'workoutId': widget.workoutId},
+                      );
+                    },
+                    child: const Text('Create First Exercise'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+
         // Retrieve the exercises and add them to the exercises stream
         locate<WorkoutsService>().retrieveAndStreamExercises(
           workout.exerciseIds,
