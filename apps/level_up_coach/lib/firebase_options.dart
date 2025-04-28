@@ -25,10 +25,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -65,6 +62,17 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyD3zNKebihgqcY7zjUEpAIP_KsUhDG6koE',
+    appId: '1:124874074089:ios:1198c47172a87ebe6d8d78',
+    messagingSenderId: '124874074089',
+    projectId: 'level-up-e4147',
+    storageBucket: 'level-up-e4147.firebasestorage.app',
+    androidClientId: '124874074089-9hc771ln1d8poapru31cdvc72auif84l.apps.googleusercontent.com',
+    iosClientId: '124874074089-ifp1hm3acira15ad2j96kvvtosiltvmv.apps.googleusercontent.com',
+    iosBundleId: 'co.enspyr.levelUpCoach',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
     apiKey: 'AIzaSyD3zNKebihgqcY7zjUEpAIP_KsUhDG6koE',
     appId: '1:124874074089:ios:1198c47172a87ebe6d8d78',
     messagingSenderId: '124874074089',
