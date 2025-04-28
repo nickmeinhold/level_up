@@ -128,6 +128,7 @@ class RepsExerciseWithWeight extends RepsExercise {
       'description': description,
       'videoUrl': videoUrl,
       'weight': weight,
+      'reps': reps,
       'sets': sets,
     };
   }
