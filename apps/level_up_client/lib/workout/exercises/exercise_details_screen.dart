@@ -29,7 +29,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
     if (mounted) {
       setState(() {
         _controller = YoutubePlayerController(
-          initialVideoId: _exercise.videoUrl,
+          initialVideoId: _exercise.videoUrl ?? 'dQw4w9WgXcQ',
           flags: const YoutubePlayerFlags(autoPlay: false, mute: false),
         );
         _loadingExercise = false;
