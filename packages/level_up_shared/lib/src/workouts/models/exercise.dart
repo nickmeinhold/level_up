@@ -1,7 +1,7 @@
 sealed class Exercise {
   const Exercise({
     required this.id,
-    required this.videoUrl,
+    this.videoUrl,
     required this.title,
     required this.subtitle,
     required this.description,
@@ -11,7 +11,7 @@ sealed class Exercise {
   final String title;
   final String subtitle;
   final String description;
-  final String videoUrl;
+  final String? videoUrl;
 
   Map<String, Object?> toJson();
 
@@ -28,7 +28,7 @@ sealed class Exercise {
 class TimedExercise extends Exercise {
   const TimedExercise({
     required super.id,
-    required super.videoUrl,
+    super.videoUrl,
     required super.title,
     required super.subtitle,
     required super.description,
@@ -55,7 +55,7 @@ class TimedExercise extends Exercise {
   factory TimedExercise.fromJsonWithId(String id, Map<String, Object?> json) {
     return TimedExercise(
       id: id,
-      videoUrl: json['videoUrl'] as String,
+      videoUrl: json['videoUrl'] as String?,
       title: json['title'] as String,
       subtitle: json['subtitle'] as String,
       description: json['description'] as String,
@@ -68,7 +68,7 @@ class TimedExercise extends Exercise {
 class RepsExercise extends Exercise {
   const RepsExercise({
     required super.id,
-    required super.videoUrl,
+    super.videoUrl,
     required super.title,
     required super.subtitle,
     required super.description,
@@ -95,7 +95,7 @@ class RepsExercise extends Exercise {
   factory RepsExercise.fromJsonWithId(String id, Map<String, Object?> json) {
     return RepsExercise(
       id: id,
-      videoUrl: json['videoUrl'] as String,
+      videoUrl: json['videoUrl'] as String?,
       title: json['title'] as String,
       subtitle: json['subtitle'] as String,
       description: json['description'] as String,
@@ -108,7 +108,7 @@ class RepsExercise extends Exercise {
 class RepsExerciseWithWeight extends RepsExercise {
   const RepsExerciseWithWeight({
     required super.id,
-    required super.videoUrl,
+    super.videoUrl,
     required super.title,
     required super.subtitle,
     required super.description,
@@ -138,7 +138,7 @@ class RepsExerciseWithWeight extends RepsExercise {
   ) {
     return RepsExerciseWithWeight(
       id: id,
-      videoUrl: json['videoUrl'] as String,
+      videoUrl: json['videoUrl'] as String?,
       title: json['title'] as String,
       subtitle: json['subtitle'] as String,
       description: json['description'] as String,
