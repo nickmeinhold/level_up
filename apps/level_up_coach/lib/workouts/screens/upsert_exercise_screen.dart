@@ -29,7 +29,7 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
 
   ExerciseType _selectedType = ExerciseType.timed;
   String? _videoUrl;
-  bool _retrieving = false;
+  bool _loading = false;
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
 
     if (widget.exerciseId != null) {
       setState(() {
-        _retrieving = true;
+        _loading = true;
       });
 
       _retrieveExerciseAndPopulateFields(widget.exerciseId!);
@@ -63,7 +63,7 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
 
     if (mounted) {
       setState(() {
-        _retrieving = false;
+        _loading = false;
 
         _titleController.text = exercise.title;
         _subtitleController.text = exercise.subtitle;
@@ -121,6 +121,12 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
           ),
         };
 
+        if (mounted) {
+          setState(() {
+            _loading = true;
+          });
+        }
+
         String exerciseId;
         if (widget.exerciseId != null) {
           exerciseId = widget.exerciseId!;
@@ -144,6 +150,12 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
             context,
           ).showSnackBar(SnackBar(content: Text('Error saving exercise: $e')));
         }
+      } finally {
+        if (mounted) {
+          setState(() {
+            _loading = false;
+          });
+        }
       }
     }
     return null;
@@ -158,7 +170,7 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
           IconButton(
             icon: const Icon(Icons.save),
             onPressed:
-                _retrieving
+                _loading
                     ? null
                     : () async {
                       final exerciseId = await _saveExercise();
@@ -170,7 +182,7 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
         ],
       ),
       body:
-          _retrieving
+          _loading
               ? Center(child: CircularProgressIndicator())
               : SingleChildScrollView(
                 padding: const EdgeInsets.all(16.0),
