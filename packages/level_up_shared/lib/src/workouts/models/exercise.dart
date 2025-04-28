@@ -2,6 +2,7 @@ sealed class Exercise {
   const Exercise({
     required this.id,
     this.videoUrl,
+    this.youtubeId,
     required this.title,
     required this.subtitle,
     required this.description,
@@ -12,6 +13,7 @@ sealed class Exercise {
   final String subtitle;
   final String description;
   final String? videoUrl;
+  final String? youtubeId;
 
   Map<String, Object?> toJson();
 
@@ -29,6 +31,7 @@ class TimedExercise extends Exercise {
   const TimedExercise({
     required super.id,
     super.videoUrl,
+    super.youtubeId,
     required super.title,
     required super.subtitle,
     required super.description,
@@ -47,6 +50,7 @@ class TimedExercise extends Exercise {
       'subtitle': subtitle,
       'description': description,
       'videoUrl': videoUrl,
+      'youtubeId': youtubeId,
       'time': time,
       'sets': sets,
     };
@@ -56,6 +60,7 @@ class TimedExercise extends Exercise {
     return TimedExercise(
       id: id,
       videoUrl: json['videoUrl'] as String?,
+      youtubeId: json['youtubeId'] as String?,
       title: json['title'] as String,
       subtitle: json['subtitle'] as String,
       description: json['description'] as String,
@@ -69,6 +74,7 @@ class RepsExercise extends Exercise {
   const RepsExercise({
     required super.id,
     super.videoUrl,
+    super.youtubeId,
     required super.title,
     required super.subtitle,
     required super.description,
@@ -87,6 +93,7 @@ class RepsExercise extends Exercise {
       'subtitle': subtitle,
       'description': description,
       'videoUrl': videoUrl,
+      'youtubeId': youtubeId,
       'reps': reps,
       'sets': sets,
     };
@@ -96,6 +103,7 @@ class RepsExercise extends Exercise {
     return RepsExercise(
       id: id,
       videoUrl: json['videoUrl'] as String?,
+      youtubeId: json['youtubeId'] as String?,
       title: json['title'] as String,
       subtitle: json['subtitle'] as String,
       description: json['description'] as String,
@@ -109,6 +117,7 @@ class RepsExerciseWithWeight extends RepsExercise {
   const RepsExerciseWithWeight({
     required super.id,
     super.videoUrl,
+    super.youtubeId,
     required super.title,
     required super.subtitle,
     required super.description,
@@ -127,6 +136,7 @@ class RepsExerciseWithWeight extends RepsExercise {
       'subtitle': subtitle,
       'description': description,
       'videoUrl': videoUrl,
+      'youtubeId': youtubeId,
       'weight': weight,
       'reps': reps,
       'sets': sets,
@@ -140,12 +150,13 @@ class RepsExerciseWithWeight extends RepsExercise {
     return RepsExerciseWithWeight(
       id: id,
       videoUrl: json['videoUrl'] as String?,
+      youtubeId: json['youtubeId'] as String?,
       title: json['title'] as String,
       subtitle: json['subtitle'] as String,
       description: json['description'] as String,
       reps: json['reps'] as int,
       sets: json['sets'] as int,
-      weight: json['weight'] as double,
+      weight: (json['weight'] as num).toDouble(),
     );
   }
 }
