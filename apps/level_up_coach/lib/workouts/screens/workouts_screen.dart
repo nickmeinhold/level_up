@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_coach/workouts/services/workouts_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
-import 'create_workout_screen.dart';
 
 class WorkoutsScreen extends StatelessWidget {
   const WorkoutsScreen({super.key});
@@ -16,10 +15,7 @@ class WorkoutsScreen extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CreateWorkoutScreen()),
-              );
+              context.push('/create-workout');
             },
           ),
         ],
@@ -46,12 +42,7 @@ class WorkoutsScreen extends StatelessWidget {
                   const SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CreateWorkoutScreen(),
-                        ),
-                      );
+                      context.push('/create-workout');
                     },
                     child: const Text('Create First Workout'),
                   ),

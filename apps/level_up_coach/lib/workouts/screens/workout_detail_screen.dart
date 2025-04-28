@@ -9,9 +9,9 @@ import 'package:level_up_coach/workouts/services/workouts_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 
 class WorkoutDetailScreen extends StatefulWidget {
-  final String workoutId;
-
   const WorkoutDetailScreen({super.key, required this.workoutId});
+
+  final String workoutId;
 
   @override
   State<WorkoutDetailScreen> createState() => _WorkoutDetailScreenState();
@@ -66,6 +66,14 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
     }
   }
 
+  Future<String?> _navigateToExercise(String exerciseId) {
+    return context.pushNamed<String>(
+      'upsert-exercise',
+      pathParameters: {'workoutId': widget.workoutId},
+      queryParameters: {'exerciseId': exerciseId},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Workout>(
@@ -92,7 +100,7 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                 icon: const Icon(Icons.add),
                 onPressed: () {
                   context.pushNamed<String>(
-                    'create-exercise',
+                    'upsert-exercise',
                     pathParameters: {'workoutId': widget.workoutId},
                   );
                 },
@@ -163,11 +171,16 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                           return switch (exercise) {
                             TimedExercise() => TimedExerciseWidget(
                               exercise: exercise,
+                              navigate: _navigateToExercise,
                             ),
                             RepsExerciseWithWeight() =>
-                              RepsExerciseWithWeightWidget(exercise: exercise),
+                              RepsExerciseWithWeightWidget(
+                                exercise: exercise,
+                                navigate: _navigateToExercise,
+                              ),
                             RepsExercise() => RepsExerciseWidget(
                               exercise: exercise,
+                              navigate: _navigateToExercise,
                             ),
                           };
                         },
@@ -185,26 +198,36 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
 }
 
 class TimedExerciseWidget extends StatelessWidget {
-  const TimedExerciseWidget({super.key, required this.exercise});
+  const TimedExerciseWidget({
+    super.key,
+    required this.exercise,
+    required this.navigate,
+  });
 
   final TimedExercise exercise;
+  final Future<String?> Function(String) navigate;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              exercise.title,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text('Sets: ${exercise.sets}'),
-            Text('Time: ${exercise.time}'),
-          ],
+      child: InkWell(
+        onTap: () {
+          navigate(exercise.id);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                exercise.title,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Text('Sets: ${exercise.sets}'),
+              Text('Time: ${exercise.time}'),
+            ],
+          ),
         ),
       ),
     );
@@ -212,26 +235,36 @@ class TimedExerciseWidget extends StatelessWidget {
 }
 
 class RepsExerciseWidget extends StatelessWidget {
-  const RepsExerciseWidget({super.key, required this.exercise});
+  const RepsExerciseWidget({
+    super.key,
+    required this.exercise,
+    required this.navigate,
+  });
 
   final RepsExercise exercise;
+  final Future<String?> Function(String) navigate;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              exercise.title,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text('Sets: ${exercise.sets}'),
-            Text('Reps: ${exercise.reps}'),
-          ],
+      child: InkWell(
+        onTap: () {
+          navigate(exercise.id);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                exercise.title,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Text('Sets: ${exercise.sets}'),
+              Text('Reps: ${exercise.reps}'),
+            ],
+          ),
         ),
       ),
     );
@@ -239,27 +272,37 @@ class RepsExerciseWidget extends StatelessWidget {
 }
 
 class RepsExerciseWithWeightWidget extends StatelessWidget {
-  const RepsExerciseWithWeightWidget({super.key, required this.exercise});
+  const RepsExerciseWithWeightWidget({
+    super.key,
+    required this.exercise,
+    required this.navigate,
+  });
 
   final RepsExerciseWithWeight exercise;
+  final Future<String?> Function(String) navigate;
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              exercise.title,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Text('Sets: ${exercise.sets}'),
-            Text('Reps: ${exercise.reps}'),
-            Text('Weight: ${exercise.weight} kg'),
-          ],
+      child: InkWell(
+        onTap: () {
+          navigate(exercise.id);
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                exercise.title,
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Text('Sets: ${exercise.sets}'),
+              Text('Reps: ${exercise.reps}'),
+              Text('Weight: ${exercise.weight} kg'),
+            ],
+          ),
         ),
       ),
     );

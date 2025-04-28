@@ -22,6 +22,13 @@ class WorkoutsService {
   Stream<List<Exercise>> get exercisesStream =>
       _exercisesStreamController.stream;
 
+  Future<Exercise> retrieveExercise(String exerciseId) async {
+    DocumentSnapshot<Map<String, dynamic>> docSnapshot =
+        await _firestore.collection('exercises').doc(exerciseId).get();
+
+    return Exercise.fromJsonWithId(docSnapshot.id, docSnapshot.data() ?? {});
+  }
+
   // Retrieve the exercises and add them to the exercises stream
   Future<void> retrieveAndStreamExercises(List<String> exerciseIds) async {
     if (exerciseIds.length > 30) throw 'Exceeded valid size for whereIn query';
@@ -82,6 +89,13 @@ class WorkoutsService {
     }, SetOptions(merge: true));
 
     return docRef.id;
+  }
+
+  Future<void> updateExercise(Exercise exercise, String workoutId) {
+    return _firestore
+        .collection('exercises')
+        .doc(exercise.id)
+        .update(exercise.toJson());
   }
 
   Future<void> uploadWorkoutImage(String workoutId, Uint8List data) async {

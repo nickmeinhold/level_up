@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_coach/profile/coach_profile_service.dart';
-import 'package:level_up_coach/workouts/screens/create_exercise_screen.dart';
+import 'package:level_up_coach/workouts/screens/create_workout_screen.dart';
+import 'package:level_up_coach/workouts/screens/record_video_screen.dart';
+import 'package:level_up_coach/workouts/screens/upsert_exercise_screen.dart';
 import 'package:level_up_coach/workouts/screens/workout_detail_screen.dart';
 import 'package:level_up_coach/workouts/services/workouts_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
@@ -41,11 +43,12 @@ final _router = GoRouter(
           ),
     ),
     GoRoute(
-      name: 'create-exercise',
-      path: '/create-exercise/workoutId/:workoutId',
+      name: 'upsert-exercise',
+      path: '/upsert-exercise/workoutId/:workoutId',
       builder:
-          (context, state) => CreateExerciseScreen(
+          (context, state) => UpsertExerciseScreen(
             workoutId: state.pathParameters['workoutId']!,
+            exerciseId: state.uri.queryParameters['exerciseId'],
           ),
     ),
     GoRoute(
@@ -59,6 +62,14 @@ final _router = GoRouter(
     GoRoute(
       path: '/edit-profile-pic',
       builder: (context, state) => const EditProfilePicScreen(),
+    ),
+    GoRoute(
+      path: '/create-workout',
+      builder: (context, state) => const CreateWorkoutScreen(),
+    ),
+    GoRoute(
+      path: '/record-video',
+      builder: (context, state) => const RecordVideoScreen(),
     ),
   ],
 );

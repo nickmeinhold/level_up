@@ -13,7 +13,6 @@ class CreateWorkoutScreen extends StatefulWidget {
 class _CreateWorkoutScreenState extends State<CreateWorkoutScreen> {
   final _formKey = GlobalKey<FormState>();
   final _descriptionController = TextEditingController();
-  final List<String> _exerciseIds = [];
 
   @override
   void dispose() {
@@ -72,36 +71,6 @@ class _CreateWorkoutScreenState extends State<CreateWorkoutScreen> {
                   }
                   return null;
                 },
-              ),
-              const SizedBox(height: 24),
-              const Text('Exercises', style: TextStyle(fontSize: 18)),
-              const Divider(),
-              Expanded(
-                child:
-                    _exerciseIds.isEmpty
-                        ? Center(
-                          child: Text(
-                            'No exercises added yet',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                        )
-                        : ListView.builder(
-                          itemCount: _exerciseIds.length,
-                          itemBuilder: (context, index) {
-                            // In a real app, you'd fetch and display exercise details
-                            return ListTile(
-                              title: Text('Exercise ${index + 1}'),
-                              trailing: IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                  setState(() {
-                                    _exerciseIds.removeAt(index);
-                                  });
-                                },
-                              ),
-                            );
-                          },
-                        ),
               ),
             ],
           ),
