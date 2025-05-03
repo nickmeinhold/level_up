@@ -87,6 +87,16 @@ final _router = GoRouter(
       path: '/edit-profile-pic',
       builder: (context, state) => const EditProfilePicScreen(),
     ),
+    GoRoute(
+      name: 'chat-screen',
+      path:
+          '/chat-screen/conversationId/:conversationId/currentUserId/:currentUserId',
+      builder:
+          (context, state) => ChatPage(
+            conversationId: state.pathParameters['conversationId']!,
+            currentUserId: state.pathParameters['currentUserId']!,
+          ),
+    ),
   ],
 );
 

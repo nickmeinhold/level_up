@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:level_up/auth/auth_service.dart';
 import 'package:level_up/workout/exercises/widgets/reps_exercise_view.dart';
 import 'package:level_up/workout/exercises/widgets/reps_exercise_with_weights_view.dart';
 import 'package:level_up/workout/exercises/widgets/timed_exercise_view.dart';
@@ -101,7 +102,19 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
                             children: [
                               Expanded(
                                 child: ElevatedButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    context.pushNamed(
+                                      'chat-screen',
+                                      pathParameters: {
+                                        'conversationId':
+                                            locate<AuthService>()
+                                                .currentUserId!,
+                                        'currentUserId':
+                                            locate<AuthService>()
+                                                .currentUserId!,
+                                      },
+                                    );
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blue,
                                     padding: const EdgeInsets.symmetric(
