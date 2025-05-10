@@ -7,8 +7,8 @@ import 'package:level_up_coach/conversations/models/conversation.dart';
 import 'package:level_up_coach/conversations/services/conversations_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 
-class ConversationsPage extends StatelessWidget {
-  const ConversationsPage({super.key});
+class ConversationsScreen extends StatelessWidget {
+  const ConversationsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

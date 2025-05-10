@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:level_up_coach/conversations/conversations_page.dart';
-import 'package:level_up_coach/profile/profile_page.dart';
+import 'package:level_up_coach/conversations/conversations_screen.dart';
+import 'package:level_up_coach/profile/profile_screen.dart';
 import 'package:level_up_coach/workouts/screens/workouts_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,9 +14,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    ConversationsPage(),
+    ConversationsScreen(),
     WorkoutsScreen(),
-    ProfilePage(),
+    ProfileScreen(),
   ];
 
   @override

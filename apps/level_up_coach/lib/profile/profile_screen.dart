@@ -4,14 +4,14 @@ import 'package:level_up_coach/auth/auth_service.dart';
 import 'package:level_up_coach/profile/coach_profile_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _ProfileScreenState extends State<ProfileScreen> {
   final TextEditingController _nameController = TextEditingController(text: '');
 
   bool _isLoading = true;
