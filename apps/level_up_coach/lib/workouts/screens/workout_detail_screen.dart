@@ -15,6 +15,7 @@ class WorkoutDetailScreen extends StatefulWidget {
 
 class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
   bool _uploading = false;
+  String _waitingMessage = '';
   final ImagePicker picker = ImagePicker();
 
   Future<void> _pickImage() async {
@@ -39,6 +40,8 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
       if (mounted) {
         setState(() {
           _uploading = false;
+          _waitingMessage =
+              'Images are cached and will take up to an hour to change';
         });
       }
     }
@@ -148,6 +151,8 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                           widget.workoutId,
                         ),
                       ),
+                      SizedBox(width: 50),
+                      Text(_waitingMessage),
                     ],
                   ),
                 ),
