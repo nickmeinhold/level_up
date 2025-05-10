@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_coach/auth/auth_service.dart';
@@ -17,6 +18,16 @@ class ConversationsPage extends StatelessWidget {
         future: locate<ConversationsService>().retrieveConversations(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
+            final error = snapshot.error;
+            // Check for error indicating user does not have permission
+            if (error is FirebaseException &&
+                error.code == 'permission-denied') {
+              return Center(
+                child: Text(
+                  'You do not yet have Coach priveleges.\n\nApply in Profile.',
+                ),
+              );
+            }
             return Center(child: Text(snapshot.error.toString()));
           }
 
