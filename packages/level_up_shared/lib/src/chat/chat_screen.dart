@@ -5,8 +5,8 @@ import 'package:level_up_shared/src/chat/text_message_view.dart';
 import 'package:level_up_shared/src/chat/video_message_view.dart';
 import 'package:level_up_shared/src/utils/locator.dart';
 
-class ChatPage extends StatefulWidget {
-  const ChatPage({
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({
     super.key,
     this.isCoach = false,
     required this.currentUserId,
@@ -18,10 +18,10 @@ class ChatPage extends StatefulWidget {
   final String conversationId;
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
 
   @override
