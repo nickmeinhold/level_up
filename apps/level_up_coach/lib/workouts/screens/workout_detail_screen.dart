@@ -14,8 +14,10 @@ class WorkoutDetailScreen extends StatefulWidget {
 }
 
 class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
+  final _descriptionController = TextEditingController();
   bool _uploading = false;
   String _waitingMessage = '';
+  WorkoutCategory _selectedCategory = WorkoutCategory.basketball;
   final ImagePicker picker = ImagePicker();
 
   Future<void> _pickImage() async {
@@ -55,6 +57,29 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
     );
   }
 
+  Future<void> _updateWorkout() async {
+    await locate<WorkoutsService>().updateWorkout(
+      workoutId: widget.workoutId,
+      category: _selectedCategory.index,
+      description: _descriptionController.text,
+    );
+  }
+
+  Future<void> _setupWorkoutValues() async {
+    // setup Workout values
+    final workout = await locate<WorkoutsService>().retrieveWorkout(
+      widget.workoutId,
+    );
+    _descriptionController.text = workout.description;
+    _selectedCategory = WorkoutCategory.values[workout.category];
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _setupWorkoutValues();
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Workout>(
@@ -71,7 +96,11 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
 
         if (workout.exerciseIds.isEmpty) {
           return Scaffold(
-            appBar: AppBar(title: Text(workout.description)),
+            appBar: AppBar(
+              title: Expanded(
+                child: TextField(controller: _descriptionController),
+              ),
+            ),
             body: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -100,7 +129,7 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
 
         return Scaffold(
           appBar: AppBar(
-            title: Text(workout.description),
+            title: Text('Workout'),
             actions: [
               IconButton(
                 icon: const Icon(Icons.add),
@@ -119,9 +148,46 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 16.0),
-                  child: Text(workout.description),
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _descriptionController,
+                    decoration: const InputDecoration(
+                      labelText: 'Description',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: DropdownButtonFormField<WorkoutCategory>(
+                    value: _selectedCategory,
+                    decoration: const InputDecoration(
+                      labelText: 'Category',
+                      border: OutlineInputBorder(),
+                    ),
+                    items:
+                        WorkoutCategory.values.map((category) {
+                          return DropdownMenuItem(
+                            value: category,
+                            child: Text(category.displayName),
+                          );
+                        }).toList(),
+                    onChanged: (category) {
+                      if (category != null) {
+                        setState(() {
+                          _selectedCategory = category;
+                        });
+                      }
+                    },
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _updateWorkout();
+                  },
+                  child: Text('Save'),
+                ),
+                const SizedBox(height: 16),
                 SizedBox(
                   height: 100,
                   child: ListView(

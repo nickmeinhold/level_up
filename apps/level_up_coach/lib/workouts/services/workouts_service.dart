@@ -59,6 +59,13 @@ class WorkoutsService {
     });
   }
 
+  Future<Workout> retrieveWorkout(String streamId) async {
+    DocumentSnapshot<Map<String, dynamic>> docSnapshot =
+        await _firestore.collection('workouts').doc(streamId).get();
+
+    return Workout.fromJsonWithId(docSnapshot.id, docSnapshot.data() ?? {});
+  }
+
   Stream<List<Workout>> streamOfWorkouts() {
     Stream<QuerySnapshot<Map<String, dynamic>>> querySnapshotStream =
         _firestore
@@ -77,6 +84,17 @@ class WorkoutsService {
     final Map<String, Object?> json = workout.toJson();
     json['createdAt'] = FieldValue.serverTimestamp();
     return _firestore.collection('workouts').add(json);
+  }
+
+  Future<void> updateWorkout({
+    required String workoutId,
+    required String description,
+    required int category,
+  }) {
+    return _firestore.collection('workouts').doc(workoutId).set({
+      'description': description,
+      'category': category,
+    }, SetOptions(merge: true));
   }
 
   Future<String> createExercise(Exercise exercise, String workoutId) async {

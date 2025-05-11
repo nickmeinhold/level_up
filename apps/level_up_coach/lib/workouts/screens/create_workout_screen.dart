@@ -26,6 +26,7 @@ class _CreateWorkoutScreenState extends State<CreateWorkoutScreen> {
         final workout = Workout(
           id: '', // Firestore will generate ID
           description: _descriptionController.text,
+          category: 0,
           exerciseIds: [],
         );
 
