@@ -40,6 +40,9 @@ class ChatService {
               );
               _messagesStreamController.add(_messages);
             }
+          } else {
+            // if docs was empty we still need to emit so we can show empty UI
+            _messagesStreamController.add(_messages);
           }
         });
   }
