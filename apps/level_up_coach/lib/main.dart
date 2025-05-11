@@ -36,7 +36,7 @@ final _router = GoRouter(
       name: 'chat',
       path: '/chat/client/:clientId/coach:coachId',
       builder:
-          (context, state) => ChatPage(
+          (context, state) => ChatScreen(
             conversationId: state.pathParameters['clientId']!,
             currentUserId: state.pathParameters['coachId']!,
             isCoach: true,

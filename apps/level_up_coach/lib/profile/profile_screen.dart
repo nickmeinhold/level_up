@@ -207,7 +207,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               ScaffoldMessenger.of(
                 context,
-              ).showSnackBar(SnackBar(content: Text('Settings page')));
+              ).showSnackBar(SnackBar(content: Text('Settings screen')));
             },
             icon: Icon(Icons.settings),
             label: Text('Settings'),
