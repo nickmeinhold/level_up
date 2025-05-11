@@ -3,14 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'package:level_up/workout/services/workouts_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 
-class WorkoutPage extends StatefulWidget {
-  const WorkoutPage({super.key});
+class WorkoutScreen extends StatefulWidget {
+  const WorkoutScreen({super.key});
 
   @override
-  State<WorkoutPage> createState() => _WorkoutPageState();
+  State<WorkoutScreen> createState() => _WorkoutScreenState();
 }
 
-class _WorkoutPageState extends State<WorkoutPage>
+class _WorkoutScreenState extends State<WorkoutScreen>
     with SingleTickerProviderStateMixin {
   final PageController _pageController = PageController(viewportFraction: 0.8);
   int _currentPage = 0;

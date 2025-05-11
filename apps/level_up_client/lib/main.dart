@@ -92,7 +92,7 @@ final _router = GoRouter(
       path:
           '/chat-screen/conversationId/:conversationId/currentUserId/:currentUserId',
       builder:
-          (context, state) => ChatPage(
+          (context, state) => ChatScreen(
             conversationId: state.pathParameters['conversationId']!,
             currentUserId: state.pathParameters['currentUserId']!,
           ),
