@@ -38,6 +38,7 @@
     }
   },
   "hosting": {
+    "target": "coach",
     "source": ".",
     "ignore": [
       "firebase.json",
