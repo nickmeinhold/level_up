@@ -61,4 +61,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'level-up-e4147.firebasestorage.app',
     measurementId: 'G-535RNX1GMV',
   );
+
 }

@@ -1,115 +1,180 @@
-// screens/home_screen.dart
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:level_up_web/widgets/coaching_card.dart';
-import 'package:level_up_web/widgets/testimonial_card.dart';
+import 'package:go_router/go_router.dart';
+import 'package:level_up_web/widgets/faq_section.dart';
+import 'package:level_up_web/widgets/lmowledge_sign_up_section.dart';
+import 'package:level_up_web/widgets/pricing_section.dart';
+import 'package:level_up_web/widgets/program_section.dart';
+import 'package:level_up_web/widgets/testimonials_section.dart';
+import 'package:video_player/video_player.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final ScrollController _scrollController = ScrollController();
+  final GlobalKey _introKey = GlobalKey();
+  final GlobalKey _pricingKey = GlobalKey();
+  final GlobalKey _programsKey = GlobalKey();
+  final GlobalKey _faqKey = GlobalKey();
+  final GlobalKey _testimonialsKey = GlobalKey();
+  final GlobalKey _knowledgeKey = GlobalKey();
+
+  late VideoPlayerController _videoController;
+
+  @override
+  void initState() {
+    super.initState();
+    _videoController = VideoPlayerController.networkUrl(
+        Uri.parse(
+          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+        ),
+      )
+      ..initialize().then((_) {
+        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+        setState(() {});
+      });
+  }
+
+  void _scrollTo(GlobalKey key) {
+    Scrollable.ensureVisible(
+      key.currentContext!,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  @override
+  void dispose() {
+    _videoController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          'LevelUp Online Coaching',
-          style: GoogleFonts.robotoCondensed(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        elevation: 0,
+        title: const Text('LevelUp Coaching'),
+        actions: [
+          TextButton(
+            onPressed: () => context.push('/signin'),
+            child: const Text('Sign In', style: TextStyle(color: Colors.white)),
+          ),
+          const SizedBox(width: 8),
+          ElevatedButton(
+            onPressed: () => context.push('/signup'),
+            child: const Text('Sign Up'),
+          ),
+          PopupMenuButton<String>(
+            itemBuilder:
+                (context) => [
+                  const PopupMenuItem(
+                    value: 'intro',
+                    child: Text('Video Intro'),
+                  ),
+                  const PopupMenuItem(value: 'pricing', child: Text('Pricing')),
+                  const PopupMenuItem(
+                    value: 'programs',
+                    child: Text('Programs'),
+                  ),
+                  const PopupMenuItem(value: 'faq', child: Text('FAQs')),
+                  const PopupMenuItem(
+                    value: 'testimonials',
+                    child: Text('Testimonials'),
+                  ),
+                  const PopupMenuItem(
+                    value: 'knowledge',
+                    child: Text('Free Knowledge'),
+                  ),
+                ],
+            onSelected: (value) {
+              switch (value) {
+                case 'intro':
+                  _scrollTo(_introKey);
+                  break;
+                case 'pricing':
+                  _scrollTo(_pricingKey);
+                  break;
+                case 'programs':
+                  _scrollTo(_programsKey);
+                  break;
+                case 'faq':
+                  _scrollTo(_faqKey);
+                  break;
+                case 'testimonials':
+                  _scrollTo(_testimonialsKey);
+                  break;
+                case 'knowledge':
+                  _scrollTo(_knowledgeKey);
+                  break;
+              }
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
+        controller: _scrollController,
         child: Column(
           children: [
-            // Hero Section
+            // Video Intro Section
             Container(
-              height: 500,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage('https://via.placeholder.com/1920x1080'),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  'Transform Your Strength',
-                  style: GoogleFonts.robotoCondensed(
-                    fontSize: 48,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ),
-
-            // Programs Section
-            Padding(
-              padding: const EdgeInsets.all(32.0),
+              key: _introKey,
+              padding: const EdgeInsets.all(40),
               child: Column(
                 children: [
-                  Text(
-                    'Our Programs',
-                    style: GoogleFonts.robotoCondensed(fontSize: 36),
+                  const Text(
+                    'Transform Your Fitness Journey',
+                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
-                  Wrap(
-                    spacing: 20,
-                    runSpacing: 20,
-                    children: const [
-                      CoachingCard(
-                        title: 'Basic Program',
-                        price: 49.99,
-                        features: ['Feature 1', 'Feature 2'],
-                        productId: 'prod_basic',
-                      ),
-                      CoachingCard(
-                        title: 'Advanced Program',
-                        price: 99.99,
-                        features: ['Feature 1', 'Feature 2', 'Feature 3'],
-                        productId: 'prod_advanced',
-                      ),
-                      CoachingCard(
-                        title: 'Elite Program',
-                        price: 149.99,
-                        features: ['All Features', '1-on-1 Coaching'],
-                        productId: 'prod_elite',
-                      ),
-                    ],
+                  SizedBox(
+                    width: 800,
+                    height: 450,
+                    child: VideoPlayer(_videoController),
                   ),
                 ],
               ),
+            ),
+
+            // Pricing Section
+            Container(
+              key: _pricingKey,
+              padding: const EdgeInsets.all(40),
+              color: Colors.grey[100],
+              child: const PricingSection(),
+            ),
+
+            // Programs Section
+            Container(
+              key: _programsKey,
+              padding: const EdgeInsets.all(40),
+              child: const ProgramsSection(),
+            ),
+
+            // FAQs Section
+            Container(
+              key: _faqKey,
+              padding: const EdgeInsets.all(40),
+              color: Colors.grey[100],
+              child: const FAQSection(),
             ),
 
             // Testimonials Section
             Container(
+              key: _testimonialsKey,
+              padding: const EdgeInsets.all(40),
+              child: const TestimonialsSection(),
+            ),
+
+            // Free Knowledge Signup
+            Container(
+              key: _knowledgeKey,
+              padding: const EdgeInsets.all(40),
               color: Colors.grey[100],
-              padding: const EdgeInsets.all(32.0),
-              child: Column(
-                children: [
-                  Text(
-                    'Success Stories',
-                    style: GoogleFonts.robotoCondensed(fontSize: 36),
-                  ),
-                  const SizedBox(height: 20),
-                  Wrap(
-                    spacing: 20,
-                    runSpacing: 20,
-                    children: const [
-                      TestimonialCard(
-                        name: 'John D.',
-                        text: 'This program changed my training completely...',
-                        imageUrl: 'https://via.placeholder.com/150',
-                      ),
-                      TestimonialCard(
-                        name: 'Sarah K.',
-                        text:
-                            'The best investment I made in my athletic career...',
-                        imageUrl: 'https://via.placeholder.com/150',
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+              child: const KnowledgeSignupSection(),
             ),
           ],
         ),
