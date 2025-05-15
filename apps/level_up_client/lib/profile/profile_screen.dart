@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:level_up/auth/auth_service.dart';
 import 'package:level_up/profile/client_profile_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 
@@ -142,9 +141,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // Support button
           ElevatedButton.icon(
             onPressed: () {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text('Support page')));
+              context.pushNamed(
+                'chat-screen',
+                pathParameters: {
+                  'conversationId': locate<AuthService>().currentUserId!,
+                  'currentUserId': locate<AuthService>().currentUserId!,
+                },
+              );
             },
             icon: Icon(Icons.help),
             label: Text('Support'),

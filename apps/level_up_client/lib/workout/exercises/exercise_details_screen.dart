@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:level_up/auth/auth_service.dart';
 import 'package:level_up/workout/exercises/widgets/reps_exercise_view.dart';
 import 'package:level_up/workout/exercises/widgets/reps_exercise_with_weights_view.dart';
 import 'package:level_up/workout/exercises/widgets/timed_exercise_view.dart';

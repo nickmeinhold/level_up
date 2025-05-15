@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:level_up/auth/auth_service.dart';
 import 'package:level_up/profile/profile_screen.dart';
 import 'package:level_up/workout/workout_screen.dart';
 import 'package:level_up_shared/level_up_shared.dart';
