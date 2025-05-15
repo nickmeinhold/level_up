@@ -5,12 +5,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
   AuthService({
-    required FirebaseAuth firebaseAuth,
+    required FirebaseAuth auth,
     required FirebaseFirestore firestore,
-  }) : _auth = firebaseAuth,
+  }) : _auth = auth,
        _firestore = firestore {
     // When a User object is emitted by the FirebaseAuth's onAuthStateChanges
     // stream we create a subscription to the firestore, which is cancelled on
@@ -48,6 +49,12 @@ class AuthService {
     return _auth.currentUser?.uid;
   }
 
+  /// Check shared prefs for onboarding status.
+  Future<bool> get userHasOnboarded async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool('onboarded') ?? false;
+  }
+
   Future<void> signInWithGoogle() async {
     if (kIsWeb) {
       GoogleAuthProvider googleProvider = GoogleAuthProvider();
@@ -81,5 +88,19 @@ class AuthService {
   Future<void> signOut() async {
     await profileStreamSubscription?.cancel();
     return _auth.signOut();
+  }
+
+  Future<void> update({String? name}) async {
+    if (_auth.currentUser == null) {
+      throw Exception(
+        'The user must be signed in and onboarded before the name is updated.',
+      );
+    }
+
+    if (name != null) {
+      await _firestore.doc('profiles/${_auth.currentUser!.uid}').set({
+        'name': name,
+      }, SetOptions(merge: true));
+    }
   }
 }
