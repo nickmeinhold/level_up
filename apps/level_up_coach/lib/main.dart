@@ -12,8 +12,6 @@ import 'package:level_up_coach/workouts/screens/upsert_exercise_screen.dart';
 import 'package:level_up_coach/workouts/screens/workout_detail_screen.dart';
 import 'package:level_up_coach/workouts/services/workouts_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
-import 'package:level_up_coach/auth/auth_service.dart';
-import 'package:level_up_coach/auth/sign_in_screen.dart';
 import 'package:level_up_coach/conversations/services/conversations_service.dart';
 import 'package:level_up_coach/home_screen.dart';
 import 'firebase_options.dart';
@@ -90,9 +88,7 @@ void main() async {
   // final cloudFunctions = FirebaseFunctions.instance;
 
   // The services make up the repositories layer of the "data layer architecture"
-  Locator.add<AuthService>(
-    AuthService(firebaseAuth: auth, firestore: firestore),
-  );
+  Locator.add<AuthService>(AuthService(auth: auth, firestore: firestore));
   Locator.add<ConversationsService>(ConversationsService(firestore: firestore));
   Locator.add<CoachProfileService>(
     CoachProfileService(auth: auth, firestore: firestore),

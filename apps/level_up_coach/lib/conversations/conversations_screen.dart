@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:level_up_coach/auth/auth_service.dart';
 import 'package:level_up_coach/conversations/conversation_list_item.dart';
 import 'package:level_up_coach/conversations/models/conversation.dart';
 import 'package:level_up_coach/conversations/services/conversations_service.dart';
