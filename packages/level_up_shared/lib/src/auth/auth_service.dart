@@ -56,9 +56,12 @@ class AuthService {
   }
 
   Future<void> signInWithGoogle() async {
+    final UserCredential userCredential;
     if (kIsWeb) {
       GoogleAuthProvider googleProvider = GoogleAuthProvider();
-      final _ = await FirebaseAuth.instance.signInWithPopup(googleProvider);
+      userCredential = await FirebaseAuth.instance.signInWithPopup(
+        googleProvider,
+      );
 
       // Or use signInWithRedirect
       // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
@@ -71,17 +74,32 @@ class AuthService {
         idToken: googleAuth?.idToken,
       );
 
-      final _ = await _auth.signInWithCredential(credential);
+      userCredential = await _auth.signInWithCredential(credential);
+    }
+
+    if (userCredential.user == null) {
+      throw 'The UserCredential returned on google sign in had no user object';
     }
   }
 
   Future<void> signInWithApple() async {
     final appleProvider = AppleAuthProvider();
+    appleProvider.addScope('email');
+    appleProvider.addScope('name');
 
+    final UserCredential userCredential;
     if (kIsWeb) {
-      final _ = await FirebaseAuth.instance.signInWithPopup(appleProvider);
+      userCredential = await FirebaseAuth.instance.signInWithPopup(
+        appleProvider,
+      );
     } else {
-      final _ = await FirebaseAuth.instance.signInWithProvider(appleProvider);
+      userCredential = await FirebaseAuth.instance.signInWithProvider(
+        appleProvider,
+      );
+    }
+
+    if (userCredential.user == null) {
+      throw 'The UserCredential returned on apple sign in had no user object';
     }
   }
 

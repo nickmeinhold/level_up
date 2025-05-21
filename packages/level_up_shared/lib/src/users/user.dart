@@ -21,12 +21,12 @@ class Client extends User {
   Client({required super.id, required super.name, super.email});
 
   factory Client.fromJsonWithId(String id, Map<String, dynamic> json) =>
-      Client(id: id, name: json['name'], email: json['email']);
+      Client(id: id, name: json['name'] ?? 'null', email: json['email']);
 }
 
 class Coach extends User {
   Coach({required super.id, required super.name, super.email});
 
   factory Coach.fromJsonWithId(String id, Map<String, dynamic> json) =>
-      Coach(id: id, name: json['name'], email: json['email']);
+      Coach(id: id, name: json['name'] ?? 'null', email: json['email']);
 }
