@@ -31,10 +31,7 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.macOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return macos;
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -60,6 +57,17 @@ class DefaultFirebaseOptions {
     authDomain: 'level-up-e4147.firebaseapp.com',
     storageBucket: 'level-up-e4147.firebasestorage.app',
     measurementId: 'G-535RNX1GMV',
+  );
+
+  static const FirebaseOptions macos = FirebaseOptions(
+    apiKey: 'AIzaSyD3zNKebihgqcY7zjUEpAIP_KsUhDG6koE',
+    appId: '1:124874074089:ios:a006bd1a5fd04c7d6d8d78',
+    messagingSenderId: '124874074089',
+    projectId: 'level-up-e4147',
+    storageBucket: 'level-up-e4147.firebasestorage.app',
+    androidClientId: '124874074089-9hc771ln1d8poapru31cdvc72auif84l.apps.googleusercontent.com',
+    iosClientId: '124874074089-vvhh6co914tr2sjej8bfdhbmftro67ro.apps.googleusercontent.com',
+    iosBundleId: 'com.example.levelUpWeb',
   );
 
 }

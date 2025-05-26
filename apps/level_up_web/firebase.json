@@ -5,8 +5,17 @@
         "lib/firebase_options.dart": {
           "projectId": "level-up-e4147",
           "configurations": {
+            "macos": "1:124874074089:ios:a006bd1a5fd04c7d6d8d78",
             "web": "1:124874074089:web:a5dabb64ee37a9076d8d78"
           }
+        }
+      },
+      "macos": {
+        "default": {
+          "projectId": "level-up-e4147",
+          "appId": "1:124874074089:ios:a006bd1a5fd04c7d6d8d78",
+          "uploadDebugSymbols": false,
+          "fileOutput": "macos/Runner/GoogleService-Info.plist"
         }
       }
     }
