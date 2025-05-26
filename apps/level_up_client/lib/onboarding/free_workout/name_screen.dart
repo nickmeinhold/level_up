@@ -63,7 +63,7 @@ class _NameScreenState extends State<NameScreen> {
                     _nameEntered
                         ? () {
                           final text = _textController.text;
-                          locate<AuthService>().update(name: text);
+                          locate<AuthService>().saveOnboardingName(text);
                           context.push('/terms-screen');
                         }
                         : null,

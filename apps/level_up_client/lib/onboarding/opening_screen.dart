@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class OpeningScreen extends StatelessWidget {
   const OpeningScreen({super.key});
@@ -80,7 +81,9 @@ class OpeningScreen extends StatelessWidget {
                         padding: const EdgeInsets.only(left: 30.0, right: 30.0),
                         child: TextButton(
                           onPressed: () {
-                            context.push('/subscribe');
+                            launchUrl(
+                              Uri.parse('https://level-up-e4147.web.app'),
+                            );
                           },
                           style: ButtonStyle(
                             padding: WidgetStateProperty.all<EdgeInsets>(

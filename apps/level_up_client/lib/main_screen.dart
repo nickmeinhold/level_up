@@ -16,8 +16,8 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> _screens = [
     WorkoutScreen(),
     ChatScreen(
-      conversationId: locate<AuthService>().currentUserId!,
-      currentUserId: locate<AuthService>().currentUserId!,
+      conversationId: locate<AuthService>().currentUserId ?? '',
+      currentUserId: locate<AuthService>().currentUserId ?? '',
     ),
     ProfileScreen(),
   ];

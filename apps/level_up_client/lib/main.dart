@@ -20,8 +20,6 @@ import 'package:level_up_shared/level_up_shared.dart';
 import 'firebase_options.dart';
 
 final _router = GoRouter(
-  initialLocation:
-      locate<AuthService>().currentUserId == null ? '/signin' : '/',
   routes: [
     GoRoute(
       name: 'home',
@@ -31,9 +29,9 @@ final _router = GoRouter(
         bool onboarded = await locate<AuthService>().userHasOnboarded;
         if (!onboarded) {
           return '/opening-screen';
-        } else {
-          return null;
         }
+
+        return null;
       },
     ),
     GoRoute(
