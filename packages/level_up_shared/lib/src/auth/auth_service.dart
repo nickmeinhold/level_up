@@ -55,6 +55,11 @@ class AuthService {
     return prefs.getBool('onboarded') ?? false;
   }
 
+  Future<bool> saveOnboardingName(String name) async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.setString('onboarding-name', name);
+  }
+
   Future<void> signInWithGoogle() async {
     final UserCredential userCredential;
     if (kIsWeb) {
@@ -77,9 +82,7 @@ class AuthService {
       userCredential = await _auth.signInWithCredential(credential);
     }
 
-    if (userCredential.user == null) {
-      throw 'The UserCredential returned on google sign in had no user object';
-    }
+    _onUserSignedIn(userCredential);
   }
 
   Future<void> signInWithApple() async {
@@ -98,9 +101,32 @@ class AuthService {
       );
     }
 
-    if (userCredential.user == null) {
-      throw 'The UserCredential returned on apple sign in had no user object';
+    _onUserSignedIn(userCredential);
+  }
+
+  Future<void> _migrateNameToFirestore(String userId) async {
+    final prefs = await SharedPreferences.getInstance();
+    final savedName = prefs.getString('onboarding-name');
+    if (savedName == null || savedName.isEmpty) {
+      return;
     }
+
+    final profilesCollection = FirebaseFirestore.instance.collection(
+      'profiles',
+    );
+
+    await profilesCollection.doc(userId).set({
+      'name': savedName,
+    }, SetOptions(merge: true));
+
+    await prefs.remove('onboarding-name');
+  }
+
+  Future<void> _onUserSignedIn(UserCredential userCredential) async {
+    if (userCredential.user == null) {
+      throw 'The UserCredential returned on sign in had no user object';
+    }
+    await _migrateNameToFirestore(userCredential.user!.uid);
   }
 
   Future<void> signOut() async {
