@@ -32,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _initializeVideo() async {
     _videoController = VideoPlayerController.networkUrl(
       Uri.parse(
-        'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+        'https://firebasestorage.googleapis.com/v0/b/promotional-videos/o/Lowell1.mp4?alt=media&token=31258c85-8b3f-42d7-8a80-59b861fbdfb7',
       ),
     );
     await _videoController.initialize();

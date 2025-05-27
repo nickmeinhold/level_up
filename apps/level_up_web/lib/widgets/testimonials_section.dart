@@ -66,7 +66,7 @@ class _TestimonialCardState extends State<TestimonialCard> {
     super.initState();
     _controller = VideoPlayerController.networkUrl(
         Uri.parse(
-          'https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4',
+          'https://firebasestorage.googleapis.com/v0/b/promotional-videos/o/Nick1.mp4?alt=media&token=ae1b3690-80b2-4441-a146-cc516aa3e019',
         ),
       )
       ..initialize().then((_) {
