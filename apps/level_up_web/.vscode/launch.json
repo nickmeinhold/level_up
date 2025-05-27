@@ -6,7 +6,7 @@
   "configurations": [
   
     {
-      "name": "level_up",
+      "name": "level_up_web",
       "request": "launch",
       "type": "dart",
       "program": "${workspaceFolder:level_up_web}/lib/main.dart",

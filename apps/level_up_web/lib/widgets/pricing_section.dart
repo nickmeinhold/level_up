@@ -1,46 +1,93 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class PricingSection extends StatelessWidget {
   const PricingSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Text(
-          'Affordable Excellence',
-          style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
           children: [
-            PricingCard(
-              title: 'LevelUp App',
-              price: '\$29/month',
-              features: const [
-                'Custom workout plans',
-                'Nutrition guidance',
-                'Progress tracking',
-                'Community support',
-              ],
+            const Text(
+              'Why Choose LevelUp Over a Personal Trainer?',
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(width: 40),
-            PricingCard(
-              title: 'Personal Trainer',
-              price: '\$99/month',
-              features: const [
-                'Everything in LevelUp App',
-                '1-on-1 video sessions',
-                'Customized coaching',
-                'Priority support',
-              ],
-              isFeatured: true,
+            const SizedBox(height: 20),
+            // For mobile responsiveness
+            LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth > 800) {
+                  // Desktop/tablet layout
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: _buildLevelUpCard(),
+                      ),
+                      const SizedBox(width: 40),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: _buildTrainerCard(),
+                      ),
+                    ],
+                  );
+                } else {
+                  // Mobile layout - vertical stacking
+                  return Column(
+                    children: [
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: _buildLevelUpCard(),
+                      ),
+                      const SizedBox(height: 20),
+                      ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        child: _buildTrainerCard(),
+                      ),
+                    ],
+                  );
+                }
+              },
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLevelUpCard() {
+    return PricingCard(
+      title: 'LevelUp App',
+      price: '\$29/month',
+      features: const [
+        'Always available 24/7',
+        'Consistent, science-backed workouts',
+        'Affordable pricing',
+        'No scheduling conflicts',
+        'Progress tracking & analytics',
+        'Large exercise library',
       ],
+      isPositive: true,
+    );
+  }
+
+  Widget _buildTrainerCard() {
+    return PricingCard(
+      title: 'Personal Trainer',
+      price: '\$99+/session',
+      features: const [
+        'Limited availability',
+        'Inconsistent quality between trainers',
+        'Expensive sessions',
+        'Scheduling conflicts common',
+        'Manual progress tracking',
+        'Limited exercise knowledge',
+      ],
+      isPositive: false,
     );
   }
 }
@@ -49,59 +96,77 @@ class PricingCard extends StatelessWidget {
   final String title;
   final String price;
   final List<String> features;
-  final bool isFeatured;
+  final bool isPositive;
 
   const PricingCard({
     super.key,
     required this.title,
     required this.price,
     required this.features,
-    this.isFeatured = false,
+    this.isPositive = true,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
-      color: isFeatured ? Colors.blue[50] : null,
+      color: isPositive ? Colors.green[50] : Colors.red[50],
       child: Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
             Text(
               title,
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: isFeatured ? Colors.blue : null,
+                color: isPositive ? Colors.green : Colors.red,
               ),
             ),
             const SizedBox(height: 10),
             Text(
               price,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: isPositive ? Colors.green : Colors.red,
+              ),
             ),
             const SizedBox(height: 20),
             ...features.map(
               (feature) => Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(Icons.check, color: Colors.green),
+                    Icon(
+                      isPositive ? Icons.check : Icons.close,
+                      color: isPositive ? Colors.green : Colors.red,
+                    ),
                     const SizedBox(width: 8),
-                    Text(feature),
+                    Expanded(
+                      child: Text(
+                        feature,
+                        style: TextStyle(
+                          color:
+                              isPositive ? Colors.green[800] : Colors.red[800],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () => context.push('/signup'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: isFeatured ? Colors.blue : null,
+            if (isPositive)
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: isPositive ? Colors.green : Colors.red,
+                ),
+                child: const Text('Get Started'),
               ),
-              child: const Text('Get Started'),
-            ),
           ],
         ),
       ),
