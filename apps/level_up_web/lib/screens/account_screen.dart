@@ -84,16 +84,9 @@ class AccountScreen extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
-            // Action Buttons
             ElevatedButton(
               onPressed: () {
-                // Handle Get Started action
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const GetStartedScreen(),
-                  ),
-                );
+                context.push('/get-started');
               },
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
@@ -139,39 +132,3 @@ class AccountScreen extends StatelessWidget {
     );
   }
 }
-
-// Placeholder screens for navigation
-class GetStartedScreen extends StatelessWidget {
-  const GetStartedScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Get Started')),
-      body: const Center(child: Text('Get Started Content')),
-    );
-  }
-}
-
-class SignUpScreen extends StatelessWidget {
-  const SignUpScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
-      body: const Center(child: Text('Sign Up Content')),
-    );
-  }
-}
-
-// How to use in your app:
-// 1. Add to your routes:
-// MaterialApp(
-//   routes: {
-//     '/account': (context) => const AccountScreen(),
-//     '/get-started': (context) => const GetStartedScreen(),
-//     '/sign-up': (context) => const SignUpScreen(),
-//   },
-// )
-// 2. Navigate using: Navigator.pushNamed(context, '/account');

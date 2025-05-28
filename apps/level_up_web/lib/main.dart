@@ -11,7 +11,7 @@ import 'package:level_up_web/screens/program_details_screen.dart';
 
 final _router = GoRouter(
   routes: [
-    GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
+    GoRoute(path: '/', builder: (context, state) => HomeScreen()),
     GoRoute(
       path: 'program/:id',
       builder:
