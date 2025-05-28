@@ -41,6 +41,9 @@ class _HomeScreenState extends State<HomeScreen> {
       videoPlayerController: _videoController,
       autoPlay: true,
       looping: true,
+      showControls: true,
+      showOptions: false,
+      allowedScreenSleep: false,
     );
 
     _videoController.setVolume(0);
@@ -89,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Text('Sign Up'),
             ),
           ],
-          if (locate<AuthService>().currentUserId == null)
+          if (locate<AuthService>().currentUserId != null)
             ElevatedButton(
               onPressed: () => context.push('/account'),
               child: const Text('Account'),
@@ -156,12 +159,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 20),
-                  SizedBox(
-                    width: 800,
-                    height: 450,
+                  AspectRatio(
+                    aspectRatio: 16 / 9,
                     child:
                         _videoInitialized
-                            ? Chewie(controller: _chewieController)
+                            ? ClipRRect(
+                              borderRadius: BorderRadius.circular(15),
+                              child: Chewie(controller: _chewieController),
+                            )
                             : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [

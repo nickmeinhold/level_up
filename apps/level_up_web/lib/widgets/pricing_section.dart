@@ -19,7 +19,7 @@ class PricingSection extends StatelessWidget {
             // For mobile responsiveness
             LayoutBuilder(
               builder: (context, constraints) {
-                if (constraints.maxWidth > 800) {
+                if (constraints.maxWidth > 850) {
                   // Desktop/tablet layout
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,

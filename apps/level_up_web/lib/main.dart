@@ -5,22 +5,28 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 import 'package:level_up_web/firebase_options.dart';
+import 'package:level_up_web/screens/account_screen.dart';
 import 'package:level_up_web/screens/home_screen.dart';
 import 'package:level_up_web/screens/program_details_screen.dart';
 
 final _router = GoRouter(
   routes: [
+    GoRoute(path: '/', builder: (context, state) => const HomeScreen()),
     GoRoute(
-      path: '/',
-      builder: (context, state) => const HomeScreen(),
-      routes: [
-        GoRoute(
-          path: 'program/:id',
-          builder:
-              (context, state) =>
-                  ProgramDetailsScreen(programId: state.pathParameters['id']!),
-        ),
-      ],
+      path: 'program/:id',
+      builder:
+          (context, state) =>
+              ProgramDetailsScreen(programId: state.pathParameters['id']!),
+    ),
+    GoRoute(
+      name: 'signin',
+      path: '/signin',
+      builder: (context, state) => const SignInScreen(),
+    ),
+    GoRoute(
+      name: 'account',
+      path: '/account',
+      builder: (context, state) => const AccountScreen(),
     ),
   ],
 );
