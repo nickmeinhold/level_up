@@ -49,6 +49,10 @@ class AuthService {
     return _auth.currentUser?.uid;
   }
 
+  String? get currentUserEmail {
+    return _auth.currentUser?.email;
+  }
+
   /// Check shared prefs for onboarding status.
   Future<bool> get userHasOnboarded async {
     final prefs = await SharedPreferences.getInstance();
@@ -104,6 +108,8 @@ class AuthService {
     _onUserSignedIn(userCredential);
   }
 
+  // If there is a name from the onboarding process in shared preferences, save
+  // it to the database and remove shared preferences, otherwise just return.
   Future<void> _migrateNameToFirestore(String userId) async {
     final prefs = await SharedPreferences.getInstance();
     final savedName = prefs.getString('onboarding-name');
