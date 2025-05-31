@@ -8,6 +8,7 @@ import 'package:level_up_web/firebase_options.dart';
 import 'package:level_up_web/screens/account_screen.dart';
 import 'package:level_up_web/screens/home_screen.dart';
 import 'package:level_up_web/screens/program_details_screen.dart';
+import 'package:level_up_web/services/subscription_service.dart';
 
 final _router = GoRouter(
   routes: [
@@ -41,6 +42,9 @@ void main() async {
 
   // Add services to the Locator
   Locator.add<AuthService>(AuthService(auth: auth, firestore: firestore));
+  Locator.add<SubscriptionService>(
+    SubscriptionService(auth: auth, firestore: firestore),
+  );
 
   runApp(const LevelUpApp());
 }
