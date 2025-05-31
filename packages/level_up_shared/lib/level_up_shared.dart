@@ -9,6 +9,7 @@ export 'src/profile/profile_service.dart';
 export 'src/profile/edit_profile_pic_screen.dart';
 export 'src/utils/locator.dart';
 export 'src/utils/enums/pic_size.dart';
+export 'src/utils/enums/subscription_status.dart';
 export 'src/users/user.dart';
 export 'src/auth/auth_service.dart';
 export 'src/auth/sign_in_screen.dart';
