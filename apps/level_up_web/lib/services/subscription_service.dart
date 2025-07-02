@@ -41,26 +41,26 @@ class SubscriptionService {
     await launchUrl(Uri.parse('https://checkout.stripe.com/pay/$sessionId'));
   }
 
-  Future<SubscriptionStatus> retrieveSubscriptionStatus() async {
+  Stream<SubscriptionStatus> subscriptionStatusStream() {
     if (_auth.currentUser == null) {
       throw 'You must be signed in to see your subscription status.';
     }
 
-    DocumentSnapshot<Map<String, dynamic>> snapshot =
-        await _firestore
-            .collection('subscriptions')
-            .doc(_auth.currentUser!.uid)
-            .get();
-
-    switch (snapshot['status']) {
-      case 'active':
-        return SubscriptionStatus.active;
-      case 'cancelled':
-        return SubscriptionStatus.cancelled;
-      case 'incomplete':
-        return SubscriptionStatus.incomplete;
-      default:
-        return SubscriptionStatus.incomplete;
-    }
+    return _firestore
+        .collection('subscriptions')
+        .doc(_auth.currentUser!.uid)
+        .snapshots()
+        .map((snapshot) {
+          switch (snapshot.data()!['status']) {
+            case 'active':
+              return SubscriptionStatus.active;
+            case 'cancelled':
+              return SubscriptionStatus.cancelled;
+            case 'incomplete':
+              return SubscriptionStatus.incomplete;
+            default:
+              return SubscriptionStatus.incomplete;
+          }
+        });
   }
 }

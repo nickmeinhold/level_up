@@ -1,7 +1,9 @@
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 import 'package:level_up_web/services/subscription_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -12,15 +14,16 @@ class AccountScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('My Account'), centerTitle: true),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: FutureBuilder(
-          future: locate<SubscriptionService>().retrieveSubscriptionStatus(),
+        child: StreamBuilder(
+          stream: locate<SubscriptionService>().subscriptionStatusStream(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               // handle error
             }
-            // if (!snapshot.hasData) {
-            //   return Center(child: CircularProgressIndicator());
-            // }
+            if (!snapshot.hasData) {
+              return Center(child: CircularProgressIndicator());
+            }
+            SubscriptionStatus status = snapshot.data!;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
@@ -51,8 +54,10 @@ class AccountScreen extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 // Subscription Status Section
-                IncompleteSubscriptionCard(),
-                // ActiveSubscriptionCard(),
+                if (status == SubscriptionStatus.incomplete)
+                  IncompleteSubscriptionCard(),
+                if (status == SubscriptionStatus.active)
+                  ActiveSubscriptionCard(),
                 const SizedBox(height: 30),
 
                 ElevatedButton(
@@ -152,8 +157,30 @@ class ActiveSubscriptionCard extends StatelessWidget {
   }
 }
 
-class IncompleteSubscriptionCard extends StatelessWidget {
+class IncompleteSubscriptionCard extends StatefulWidget {
   const IncompleteSubscriptionCard({super.key});
+
+  @override
+  State<IncompleteSubscriptionCard> createState() =>
+      _IncompleteSubscriptionCardState();
+}
+
+class _IncompleteSubscriptionCardState
+    extends State<IncompleteSubscriptionCard> {
+  bool _retrievingSessionUrl = false;
+
+  Future<void> _navigateToStripe() async {
+    _retrievingSessionUrl = true;
+    final callable = FirebaseFunctions.instance.httpsCallable(
+      'createCheckoutSession',
+    );
+
+    final result = await callable.call({});
+    String urlString = result.data['url'] as String;
+    await launchUrl(Uri.parse(urlString));
+
+    _retrievingSessionUrl = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -195,29 +222,31 @@ class IncompleteSubscriptionCard extends StatelessWidget {
               style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
             SizedBox(height: 24),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue, // Background color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+            if (_retrievingSessionUrl) CircularProgressIndicator(),
+            if (!_retrievingSessionUrl)
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue, // Background color
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 14),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 14),
-                ),
-                onPressed: () {
-                  // Handle complete sign up action
-                },
-                child: Text(
-                  'Complete Sign Up',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                  onPressed: () {
+                    _navigateToStripe();
+                  },
+                  child: Text(
+                    'Complete Sign Up',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),
