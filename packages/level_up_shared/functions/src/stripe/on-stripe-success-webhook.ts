@@ -48,7 +48,7 @@ export const handleStripeWebhook = onRequest(async (request, response) => {
       const subscription: Stripe.Subscription = event.data.object;
 
       logger.info(`Subscription created: subscriptionId: ${subscription.id}, 
-customerId: ${subscription.customer}`);
+      customerId: ${subscription.customer}`);
 
       // Assuming you pass userId as metadata when creating subscription
       const userId = subscription.metadata?.firebaseUID;
@@ -64,20 +64,23 @@ customerId: ${subscription.customer}`);
           status: subscription.status,
         },
       );
+
       logger.info(`User ${userId} subscription status updated to 
-${subscription.status}`);
+      ${subscription.status}`);
+
       break;
     }
 
     case 'customer.subscription.updated': {
       const subscription: Stripe.Subscription = event.data.object;
+
       logger.info(`Subscription updated: subscriptionId: ${subscription.id}, 
-newStatus: ${subscription.status}`);
+      newStatus: ${subscription.status}`);
       const userId = subscription.metadata?.firebaseUID;
 
       if (!userId) {
-        throw new ReferenceError(`Subscription ${subscription.id} 
-updated without userId metadata.`);
+        throw new ReferenceError(`Subscription ${subscription.id} ` +
+          'updated without userId metadata.');
       }
 
       const subscriptionDoc = db.collection('subscriptions').doc(userId);
@@ -96,8 +99,8 @@ updated without userId metadata.`);
       const userId = subscription.metadata?.firebaseUID;
 
       if (!userId) {
-        logger.warn(`Subscription ${subscription.id} 
-deleted without userId metadata.`);
+        logger.warn(`Subscription ${subscription.id} ` +
+          'deleted without userId metadata.');
         break;
       }
 
@@ -108,16 +111,16 @@ deleted without userId metadata.`);
         'subscriptionId': null, // Clear the subscription ID
       });
 
-      logger.info(`User ${userId} subscription status updated to 
-${subscription.status}`);
+      logger.info(`User ${userId} subscription status updated to ` +
+        `${subscription.status}`);
 
       break;
     }
 
     case 'invoice.paid': {
       const invoice: Stripe.Invoice = event.data.object;
-      logger.info(`Invoice paid: invoiceId: ${invoice.id}, 
-customerId: ${invoice.customer}`);
+      logger.info(`Invoice paid: invoiceId: ${invoice.id}, ` +
+        `customerId: ${invoice.customer}`);
 
       // Grant access to services after a successful payment.
       // Ensure that the subscription data is updated accordingly.
@@ -130,14 +133,15 @@ customerId: ${invoice.customer}`);
       }
 
       if (querySnapshot.docs.length > 1) {
-        throw new RangeError(`There was more than one subscription 
-doc for the customer`);
+        throw new RangeError('There was more than one subscription ' +
+          'doc for the customer');
       }
 
-      await querySnapshot.docs[0].ref.update({'invoiceStatus': invoice.status});
+      await querySnapshot.docs[0].ref.update({'invoiceStatus': invoice.status,
+        'nextPaymentDate': invoice.next_payment_attempt});
 
-      logger.info(`Customer ${invoice.customer} subscription doc updated after 
-invoice paid.`);
+      logger.info(`Customer ${invoice.customer} subscription doc updated ` +
+        'after invoice paid.');
 
       break;
     }
@@ -145,15 +149,15 @@ invoice paid.`);
     case 'invoice.payment_failed': {
       const invoice = event.data.object as Stripe.Invoice;
 
-      logger.warn(`Invoice payment failed: invoiceId: ${invoice.id}, 
-customerId: ${invoice.customer}`);
+      logger.warn(`Invoice payment failed: invoiceId: ${invoice.id}, ` +
+        `customerId: ${invoice.customer}`);
 
       // Notify user, update subscription status to 'past_due' or 'unpaid'
       const userId = invoice.metadata?.userId;
 
       if (!userId) {
-        logger.warn(`Invoice ${invoice.id} payment failed 
-without userId metadata.`);
+        logger.warn(`Invoice ${invoice.id} payment failed ` +
+          'without userId metadata.');
         break;
       }
 
@@ -165,8 +169,8 @@ without userId metadata.`);
       }
 
       if (querySnapshot.docs.length > 1) {
-        throw new RangeError(`There was more than one subscription 
-doc for the customer`);
+        throw new RangeError('There was more than one subscription ' +
+          'doc for the customer');
       }
 
       await querySnapshot.docs[0].ref.update({'invoiceStatus': invoice.status});
