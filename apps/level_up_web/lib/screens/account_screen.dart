@@ -1,9 +1,7 @@
-import 'package:cloud_functions/cloud_functions.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 import 'package:level_up_web/services/subscription_service.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -111,13 +109,35 @@ class AccountScreen extends StatelessWidget {
   }
 }
 
-class ActiveSubscriptionCard extends StatelessWidget {
+class ActiveSubscriptionCard extends StatefulWidget {
   const ActiveSubscriptionCard({super.key});
+
+  @override
+  State<ActiveSubscriptionCard> createState() => _ActiveSubscriptionCardState();
+}
+
+class _ActiveSubscriptionCardState extends State<ActiveSubscriptionCard> {
+  bool _cancelling = false;
+
+  Future<void> _cancelSubscription() async {
+    setState(() {
+      _cancelling = true;
+    });
+    await locate<SubscriptionService>().cancelSubscription();
+    setState(() {
+      _cancelling = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          12,
+        ), // Added rounded corners for better aesthetics
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -150,6 +170,114 @@ class ActiveSubscriptionCard extends StatelessWidget {
               'Renews on: January 1, 2025',
               style: TextStyle(fontSize: 14, color: Colors.grey),
             ),
+            const SizedBox(height: 20), // Added spacing before the button
+            // Subtle 'Cancel Subscription' button
+            Align(
+              alignment: Alignment.centerRight, // Align button to the right
+              child:
+                  _cancelling
+                      ? const CircularProgressIndicator()
+                      : TextButton(
+                        onPressed: () async {
+                          // Made onPressed async to await the dialog result
+                          // Show confirmation dialog
+                          final bool? confirmCancel = await showDialog<bool>(
+                            context: context,
+                            builder: (BuildContext dialogContext) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                title: const Text('Cancel Subscription?'),
+                                content: const Text(
+                                  'Are you sure you want to cancel your subscription?',
+                                ),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(
+                                        dialogContext,
+                                      ).pop(false); // User chose not to cancel
+                                    },
+                                    child: Text(
+                                      'No, Keep Subscription',
+                                      style: TextStyle(
+                                        color: Theme.of(context).primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(dialogContext).pop(
+                                        true,
+                                      ); // User confirmed cancellation
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor:
+                                          Colors
+                                              .red, // Red button for destructive action
+                                      foregroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    ),
+                                    child: const Text('Yes, Cancel'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+
+                          // If user confirmed cancellation
+                          if (confirmCancel == true) {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Subscription cancellation initiated...',
+                                  ),
+                                  duration: Duration(seconds: 3),
+                                ),
+                              );
+                            }
+
+                            await _cancelSubscription();
+                          } else {
+                            if (context.mounted) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text(
+                                    'Subscription cancellation aborted.',
+                                  ),
+                                  duration: Duration(seconds: 2),
+                                ),
+                              );
+                            }
+                          }
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor:
+                              Colors.red[700], // Subtle red text color
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              color: Colors.red[200]!,
+                            ), // Light red border
+                          ),
+                        ),
+                        child: const Text(
+                          'Cancel Subscription',
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+            ),
           ],
         ),
       ),
@@ -170,16 +298,15 @@ class _IncompleteSubscriptionCardState
   bool _retrievingSessionUrl = false;
 
   Future<void> _navigateToStripe() async {
-    _retrievingSessionUrl = true;
-    final callable = FirebaseFunctions.instance.httpsCallable(
-      'createCheckoutSession',
-    );
+    setState(() {
+      _retrievingSessionUrl = true;
+    });
 
-    final result = await callable.call({});
-    String urlString = result.data['url'] as String;
-    await launchUrl(Uri.parse(urlString));
+    await locate<SubscriptionService>().processWebPayment();
 
-    _retrievingSessionUrl = false;
+    setState(() {
+      _retrievingSessionUrl = false;
+    });
   }
 
   @override
