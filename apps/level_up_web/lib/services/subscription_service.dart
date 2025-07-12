@@ -22,7 +22,7 @@ class SubscriptionService {
 
     final result = await callable.call({});
     String urlString = result.data['url'] as String;
-    await launchUrl(Uri.parse(urlString));
+    await launchUrl(Uri.parse(urlString), webOnlyWindowName: '_self');
   }
 
   Future<void> cancelSubscription() async {

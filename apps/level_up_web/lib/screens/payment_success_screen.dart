@@ -46,14 +46,6 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
               ),
               const SizedBox(height: 15),
 
-              // Instruction Message
-              Text(
-                'You can now close this window.',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, color: Colors.grey[700]),
-              ),
-              const SizedBox(height: 50),
-
               // Call to Action / Next Step Message
               Text(
                 "Let's get to work!",
