@@ -60,7 +60,7 @@ class AccountScreen extends StatelessWidget {
 
                 ElevatedButton(
                   onPressed: () {
-                    context.push('/get-started');
+                    context.go('/get-started');
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),

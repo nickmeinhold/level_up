@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:web/web.dart' hide Text;
 
 class PaymentSuccessScreen extends StatefulWidget {
   const PaymentSuccessScreen({super.key});
@@ -9,12 +8,6 @@ class PaymentSuccessScreen extends StatefulWidget {
 }
 
 class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
-  @override
-  void initState() {
-    super.initState();
-    window.close();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,15 +40,7 @@ class _PaymentSuccessScreenState extends State<PaymentSuccessScreen> {
               const SizedBox(height: 15),
 
               // Call to Action / Next Step Message
-              Text(
-                "Let's get to work!",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.green[800],
-                ),
-              ),
+              TextButton(onPressed: () {}, child: Text("Let's get to work!")),
               const SizedBox(height: 20),
 
               // Optional: A small message if the user doesn't close it

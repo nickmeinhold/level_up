@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 import 'package:level_up_web/firebase_options.dart';
 import 'package:level_up_web/screens/account_screen.dart';
+import 'package:level_up_web/screens/get_started_screen.dart';
 import 'package:level_up_web/screens/home_screen.dart';
 import 'package:level_up_web/screens/payment_failure_screen.dart';
 import 'package:level_up_web/screens/payment_success_screen.dart';
@@ -40,6 +41,11 @@ final _router = GoRouter(
       name: 'failure',
       path: '/failure',
       builder: (context, state) => const PaymentFailureScreen(),
+    ),
+    GoRoute(
+      name: 'get-started',
+      path: '/get-started',
+      builder: (context, state) => const GetStartedScreen(),
     ),
   ],
 );
