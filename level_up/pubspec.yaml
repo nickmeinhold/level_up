@@ -1,0 +1,11 @@
+name: benson_workspace
+publish_to: 'none'
+
+environment:
+  sdk: ^3.7.0
+
+workspace:
+  - apps/level_up_client
+  - apps/level_up_coach
+  - apps/level_up_web
+  - packages/level_up_shared
