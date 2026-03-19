@@ -84,7 +84,6 @@ class _ChatScreenState extends State<ChatScreen> {
                                   reverse: true,
                                   itemCount: messages.length,
                                   itemBuilder: (context, index) {
-                                    if (index == messages.length - 1) {}
                                     ChatMessage message = messages[index];
                                     // If a coach sees the message, mark as read
                                     // (only once per message to avoid excessive

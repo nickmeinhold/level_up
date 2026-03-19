@@ -41,10 +41,11 @@ export const cancelSubscription = onCall(
       const subscription = await stripe.subscriptions.cancel(subscriptionId);
 
       // Only update Firestore after Stripe confirms cancellation.
+      // Stripe uses US spelling "canceled"; we standardize on that.
       if (subscription.status === 'canceled') {
         await subscriptionDoc.update({
-          status: 'cancelled',
-          cancelledAt: new Date().toISOString(),
+          status: 'canceled',
+          canceledAt: new Date().toISOString(),
         });
       }
 

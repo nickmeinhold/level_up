@@ -42,7 +42,10 @@ jobs:
           channel: stable
       - run: flutter pub get
       - run: flutter analyze
-      - run: flutter test --coverage
+      - name: Test shared package
+        run: cd packages/level_up_shared && flutter test --coverage
+      - name: Test web app
+        run: cd apps/level_up_web && flutter test
 
       # Cloud Functions (TypeScript)
       - uses: actions/setup-node@v4
