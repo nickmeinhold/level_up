@@ -26,21 +26,23 @@ export const handleStripeWebhook = onRequest(async (request, response) => {
     const db = getFirestore();
 
     // Implement idempotency by checking if the event has already been
-    // processed.
+    // processed. We use the event ID as the document ID so each event
+    // can only be processed once.
     const subscriptionEventsDoc = db.collection('subscription-events')
       .doc(event.id);
     const subscriptionEventsDocSnapshot = await subscriptionEventsDoc.get();
 
-    if (!subscriptionEventsDocSnapshot) {
-      throw new ReferenceError('subscriptionDocSnapshot was undefined or null');
-    }
-
-    const data = subscriptionEventsDocSnapshot.data();
-    if (data && (data.id == event.id)) {
+    if (subscriptionEventsDocSnapshot.exists) {
       logger.info(`Event ${event.id} already processed. Skipping.`);
       response.status(200).send('Event already processed.');
       return;
     }
+
+    // Mark event as processing before handling it.
+    await subscriptionEventsDoc.set({
+      type: event.type,
+      processedAt: new Date().toISOString(),
+    });
 
     // Handle subscription-specific events
     switch (event.type) {
@@ -153,14 +155,7 @@ export const handleStripeWebhook = onRequest(async (request, response) => {
         `customerId: ${invoice.customer}`);
 
       // Notify user, update subscription status to 'past_due' or 'unpaid'
-      const userId = invoice.metadata?.userId;
-
-      if (!userId) {
-        logger.warn(`Invoice ${invoice.id} payment failed ` +
-          'without userId metadata.');
-        break;
-      }
-
+      // Look up user by stripeCustomerId (consistent with invoice.paid handler)
       const querySnapshot = await db.collection('subscriptions')
         .where('stripeCustomerId', '==', invoice.customer).get();
 
@@ -175,8 +170,8 @@ export const handleStripeWebhook = onRequest(async (request, response) => {
 
       await querySnapshot.docs[0].ref.update({'invoiceStatus': invoice.status});
 
-      logger.info(`User ${userId} invvoice status updated to 
-        ${invoice.status} after payment failed.`);
+      logger.info(`Customer ${invoice.customer} invoice status updated to ` +
+        `${invoice.status} after payment failed.`);
       break;
     }
 

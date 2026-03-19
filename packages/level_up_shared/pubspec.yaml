@@ -1,21 +1,22 @@
 name: level_up_shared
 description: "Models and views shared between level_up and level_up_coach"
 version: 0.0.1
+resolution: workspace
 
 environment:
   sdk: ^3.7.2
   flutter: ">=1.17.0"
 
 dependencies:
-  cloud_firestore: ^5.6.6
-  firebase_auth: ^5.5.2
-  firebase_storage: ^12.4.5
+  cloud_firestore: ^6.1.0
+  firebase_auth: ^6.1.2
+  firebase_storage: ^13.0.4
   flutter:
     sdk: flutter
   flutter_svg: ^2.1.0
-  go_router: ^15.0.0
-  google_sign_in: ^6.3.0
-  image_cropper: ^9.1.0
+  go_router: ^17.0.1
+  google_sign_in: ^7.2.0
+  image_cropper: ^11.0.0
   image_picker: ^1.1.2
   rxdart: ^0.28.0
   shared_preferences: ^2.5.3
@@ -24,7 +25,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 flutter:
   uses-material-design: true

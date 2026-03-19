@@ -19,6 +19,7 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
   String _waitingMessage = '';
   WorkoutCategory _selectedCategory = WorkoutCategory.basketball;
   final ImagePicker picker = ImagePicker();
+  List<String>? _lastStreamedExerciseIds;
 
   Future<void> _pickImage() async {
     setState(() {
@@ -26,9 +27,10 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
     });
     try {
       final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-      final imageBytes = await image!.readAsBytes();
+      if (image == null) return;
+      final imageBytes = await image.readAsBytes();
 
-      locate<WorkoutsService>().uploadWorkoutImage(
+      await locate<WorkoutsService>().uploadWorkoutImage(
         widget.workoutId,
         imageBytes,
       );
@@ -122,10 +124,16 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
           );
         }
 
-        // Retrieve the exercises and add them to the exercises stream
-        locate<WorkoutsService>().retrieveAndStreamExercises(
-          workout.exerciseIds,
-        );
+        // Only re-fetch exercises when the list actually changes,
+        // not on every StreamBuilder rebuild.
+        if (_lastStreamedExerciseIds == null ||
+            _lastStreamedExerciseIds.toString() !=
+                workout.exerciseIds.toString()) {
+          _lastStreamedExerciseIds = List.of(workout.exerciseIds);
+          locate<WorkoutsService>().retrieveAndStreamExercises(
+            workout.exerciseIds,
+          );
+        }
 
         return Scaffold(
           appBar: AppBar(
@@ -160,7 +168,7 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: DropdownButtonFormField<WorkoutCategory>(
-                    value: _selectedCategory,
+                    initialValue: _selectedCategory,
                     decoration: const InputDecoration(
                       labelText: 'Category',
                       border: OutlineInputBorder(),

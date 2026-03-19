@@ -19,8 +19,8 @@ class _TimedExerciseViewState extends State<TimedExerciseView> {
   Timer? _timer;
   late int _countdown;
   bool _isCountdownActive = false;
-  late final int _sets;
-  late final List<bool> _isChecked;
+  late int _sets;
+  late List<bool> _isChecked;
   int _numCompletedSets = 0;
 
   @override
@@ -62,7 +62,7 @@ class _TimedExerciseViewState extends State<TimedExerciseView> {
     final choseRepeat = await context.push<bool>('/time-up');
     if (mounted) {
       setState(() {
-        if (choseRepeat!) {
+        if (choseRepeat == true) {
           _numCompletedSets++;
         }
         if (_numCompletedSets == _isChecked.length) {

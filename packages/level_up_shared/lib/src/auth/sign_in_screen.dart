@@ -15,25 +15,47 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   bool isSigningIn = false;
 
-  Future<void> _signInWithApple(BuildContext context) async {
+  Future<void> _signInWithApple() async {
     setState(() {
       isSigningIn = true;
     });
-    await locate<AuthService>().signInWithApple();
-
-    if (context.mounted) {
+    try {
+      await locate<AuthService>().signInWithApple();
+      if (!mounted) return;
       context.go('/');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign in failed. Please try again.')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isSigningIn = false;
+        });
+      }
     }
   }
 
-  Future<void> _signInWithGoogle(BuildContext context) async {
+  Future<void> _signInWithGoogle() async {
     setState(() {
       isSigningIn = true;
     });
-    await locate<AuthService>().signInWithGoogle();
-
-    if (context.mounted) {
+    try {
+      await locate<AuthService>().signInWithGoogle();
+      if (!mounted) return;
       context.go('/');
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Sign in failed. Please try again.')),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          isSigningIn = false;
+        });
+      }
     }
   }
 
@@ -57,7 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             width: 20,
                             height: 20,
                           ),
-                          onPressed: () => _signInWithApple(context),
+                          onPressed: _signInWithApple,
                           label: const Text('Sign in with Apple'),
                           style: const ButtonStyle(
                             foregroundColor: WidgetStatePropertyAll(
@@ -89,9 +111,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             width: 24,
                             height: 24,
                           ),
-                          onPressed: () {
-                            _signInWithGoogle(context);
-                          },
+                          onPressed: _signInWithGoogle,
                           label: const Text('Sign in with Google'),
                           style: ButtonStyle(
                             foregroundColor: const WidgetStatePropertyAll(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:level_up/profile/client_profile_service.dart';
-import 'package:level_up/profile/widgets/sign_in_button.dart';
-import 'package:level_up/profile/widgets/sign_out_button.dart';
+import 'package:level_up_client/profile/client_profile_service.dart';
+import 'package:level_up_client/profile/widgets/sign_in_button.dart';
+import 'package:level_up_client/profile/widgets/sign_out_button.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 
 class ProfileScreen extends StatefulWidget {

@@ -32,7 +32,7 @@ final _router = GoRouter(
     ),
     GoRoute(
       name: 'chat',
-      path: '/chat/client/:clientId/coach:coachId',
+      path: '/chat/client/:clientId/coach/:coachId',
       builder:
           (context, state) => ChatScreen(
             conversationId: state.pathParameters['clientId']!,

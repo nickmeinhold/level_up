@@ -27,6 +27,7 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
+  final Set<String> _markedAsReadIds = {};
   bool _isSignedIn = false;
 
   @override
@@ -83,10 +84,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                   reverse: true,
                                   itemCount: messages.length,
                                   itemBuilder: (context, index) {
-                                    if (index == messages.length - 1) {}
                                     ChatMessage message = messages[index];
-                                    // if a coach sees the message, mark as read
-                                    if (widget._isCoach) {
+                                    // If a coach sees the message, mark as read
+                                    // (only once per message to avoid excessive
+                                    // Firestore writes on every rebuild).
+                                    if (widget._isCoach &&
+                                        !message.read &&
+                                        !_markedAsReadIds.contains(message.id)) {
+                                      _markedAsReadIds.add(message.id);
                                       locate<ChatService>().setMessageToRead(
                                         widget._conversationId,
                                         message,

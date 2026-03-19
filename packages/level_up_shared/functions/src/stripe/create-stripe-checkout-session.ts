@@ -11,6 +11,7 @@ export const createCheckoutSession = onCall(
     const stripe = new Stripe(stripeKey.value());
 
     const appBaseUrl = defineString('APP_BASE_URL');
+    const stripePriceId = defineString('STRIPE_PRICE_ID');
 
     const db = getFirestore();
 
@@ -44,7 +45,7 @@ export const createCheckoutSession = onCall(
         mode: 'subscription', // Essential for subscription payments
         line_items: [
           {
-            price: 'price_1RCa6SDCOjbYo7hHu9lCML7i',
+            price: stripePriceId.value(),
             quantity: 1,
           },
         ],

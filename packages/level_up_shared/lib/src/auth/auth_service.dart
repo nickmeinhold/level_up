@@ -13,10 +13,14 @@ class AuthService {
     required FirebaseFirestore firestore,
   }) : _auth = auth,
        _firestore = firestore {
+    // Initialize GoogleSignIn singleton (not needed on web - uses Firebase popup)
+    if (!kIsWeb) {
+      GoogleSignIn.instance.initialize();
+    }
     // When a User object is emitted by the FirebaseAuth's onAuthStateChanges
     // stream we create a subscription to the firestore, which is cancelled on
     // sign out to avoid listening to the firestore while signed out.
-    _auth.authStateChanges().listen((user) {
+    _authStateSubscription = _auth.authStateChanges().listen((user) {
       if (user != null) {
         if (profileStreamSubscription != null) {
           profileStreamSubscription!.cancel();
@@ -41,6 +45,7 @@ class AuthService {
   final FirebaseFirestore _firestore;
 
   final _userSubject = BehaviorSubject<Map<String, Object?>>.seeded({});
+  StreamSubscription? _authStateSubscription;
   StreamSubscription<Map<String, Object?>?>? profileStreamSubscription;
 
   Stream<Map<String, Object?>?> get profileDocStream => _userSubject.stream;
@@ -71,16 +76,19 @@ class AuthService {
       userCredential = await FirebaseAuth.instance.signInWithPopup(
         googleProvider,
       );
-
-      // Or use signInWithRedirect
-      // return await FirebaseAuth.instance.signInWithRedirect(googleProvider);
     } else {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      // google_sign_in v7: use singleton and authenticate()
+      final GoogleSignInAccount googleUser;
+      try {
+        googleUser = await GoogleSignIn.instance.authenticate();
+      } on GoogleSignInException catch (e) {
+        if (e.code == GoogleSignInExceptionCode.canceled) {
+          return; // User cancelled, do nothing
+        }
+        rethrow;
+      }
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
+        idToken: googleUser.authentication.idToken,
       );
 
       userCredential = await _auth.signInWithCredential(credential);
@@ -137,6 +145,7 @@ class AuthService {
 
   Future<void> signOut() async {
     await profileStreamSubscription?.cancel();
+    await _authStateSubscription?.cancel();
     return _auth.signOut();
   }
 

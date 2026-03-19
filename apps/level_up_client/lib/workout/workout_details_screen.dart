@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:level_up/workout/services/workouts_service.dart';
+import 'package:level_up_client/workout/services/workouts_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 
 class WorkoutDetailsScreen extends StatefulWidget {

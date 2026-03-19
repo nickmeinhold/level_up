@@ -54,6 +54,9 @@ class ChatService {
   void retrievePreviousMessages(String conversationId) {
     if (_lastSnapshot == null) return;
 
+    // Cancel the previous subscription to avoid leaking listeners.
+    _streamSubscription?.cancel();
+
     _streamSubscription = _firestore
         .collection('conversations')
         .doc(conversationId)
