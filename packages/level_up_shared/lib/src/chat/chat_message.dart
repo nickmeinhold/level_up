@@ -6,20 +6,23 @@ sealed class ChatMessage {
   final bool read;
 
   factory ChatMessage.fromJsonWithId(String id, Map<String, Object?> data) {
-    if (data['type'] == 'text') {
-      return TextChatMessage(
+    return switch (data['type']) {
+      'text' => TextChatMessage(
         id: id,
         authorId: data['authorId'] as String,
         read: data['read'] as bool,
         message: data['message'] as String,
-      );
-    }
-    return VideoChatMessage(
-      id: id,
-      authorId: data['authorId'] as String,
-      read: data['read'] as bool,
-      videoUrl: data['videoUrl'] as String,
-    );
+      ),
+      'video' => VideoChatMessage(
+        id: id,
+        authorId: data['authorId'] as String,
+        read: data['read'] as bool,
+        videoUrl: data['videoUrl'] as String,
+      ),
+      _ => throw ArgumentError(
+        'Unknown or missing ChatMessage type: ${data['type']}',
+      ),
+    };
   }
 }
 

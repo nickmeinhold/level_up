@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:level_up/profile/profile_screen.dart';
-import 'package:level_up/workout/workout_screen.dart';
+import 'package:level_up_client/profile/profile_screen.dart';
+import 'package:level_up_client/workout/workout_screen.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 
 class MainScreen extends StatefulWidget {

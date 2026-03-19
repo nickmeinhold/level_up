@@ -12,7 +12,11 @@ class Workout {
   final List<String> exerciseIds;
 
   Map<String, Object?> toJson() {
-    return {'description': description, 'exerciseIds': exerciseIds};
+    return {
+      'category': category,
+      'description': description,
+      'exerciseIds': exerciseIds,
+    };
   }
 
   factory Workout.fromJsonWithId(String id, Map<String, Object?> json) {

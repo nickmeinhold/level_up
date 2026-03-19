@@ -19,8 +19,8 @@ class _TimedExerciseViewState extends State<TimedExerciseView> {
   Timer? _timer;
   late int _countdown;
   bool _isCountdownActive = false;
-  late final int _sets;
-  late final List<bool> _isChecked;
+  late int _sets;
+  late List<bool> _isChecked;
   int _numCompletedSets = 0;
 
   @override

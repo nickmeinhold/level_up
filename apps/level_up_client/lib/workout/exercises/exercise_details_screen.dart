@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:level_up/workout/exercises/widgets/reps_exercise_view.dart';
-import 'package:level_up/workout/exercises/widgets/reps_exercise_with_weights_view.dart';
-import 'package:level_up/workout/exercises/widgets/timed_exercise_view.dart';
-import 'package:level_up/workout/services/workouts_service.dart';
+import 'package:level_up_client/workout/exercises/widgets/reps_exercise_view.dart';
+import 'package:level_up_client/workout/exercises/widgets/reps_exercise_with_weights_view.dart';
+import 'package:level_up_client/workout/exercises/widgets/timed_exercise_view.dart';
+import 'package:level_up_client/workout/services/workouts_service.dart';
 import 'package:level_up_shared/level_up_shared.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 

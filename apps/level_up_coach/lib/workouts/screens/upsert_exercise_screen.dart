@@ -250,7 +250,7 @@ class _UpsertExerciseScreenState extends State<UpsertExerciseScreen> {
                       ),
                       const SizedBox(height: 16),
                       DropdownButtonFormField<ExerciseType>(
-                        value: _selectedType,
+                        initialValue: _selectedType,
                         decoration: const InputDecoration(
                           labelText: 'Exercise Type',
                           border: OutlineInputBorder(),

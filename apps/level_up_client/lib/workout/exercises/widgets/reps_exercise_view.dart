@@ -12,9 +12,9 @@ class RepsExerciseView extends StatefulWidget {
 }
 
 class _RepsExerciseViewState extends State<RepsExerciseView> {
-  late final int _reps;
-  late final int _sets;
-  late final List<bool> _isChecked;
+  late int _reps;
+  late int _sets;
+  late List<bool> _isChecked;
   int _numCompletedSets = 0;
 
   @override
