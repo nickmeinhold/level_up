@@ -2,7 +2,7 @@
 
 Comprehensive review conducted 2026-03-18 covering all 3 Flutter apps, the shared package, and Firebase Cloud Functions.
 
-> **Status (2026-03-18):** All P0 and P1 items fixed. 38 regression tests passing. Analyzer clean (1 pre-existing info lint). TypeScript compiles clean.
+> **Status (2026-03-20):** All P0 and P1 items fixed. P2-18 and P3-23 also fixed. 68 regression tests passing. CI pipeline active. Analyzer clean (1 pre-existing info lint). TypeScript compiles clean.
 
 ---
 
@@ -118,13 +118,13 @@ Initially flagged, but the client app's `WorkoutsService` imports from `level_up
 
 **Fix:** Standardize on one field name (e.g., `firebaseUID`) across all Stripe metadata.
 
-### 6. No customer deduplication in checkout
+### FIXED: 6. No customer deduplication in checkout
 
 **File:** `packages/level_up_shared/functions/src/stripe/create-stripe-checkout-session.ts:26-41`
 
 **Problem:** `list({email, limit: 1})` + create-if-empty is not atomic. Concurrent requests can create duplicate Stripe customers.
 
-**Fix:** Use Stripe's idempotency key on customer creation, or use `list` + mutex/transaction.
+**Fix applied:** Added Stripe idempotency key (`create-customer-${userId}`) to `stripe.customers.create()`. Concurrent requests with the same userId now return the same customer.
 
 ### FIXED: 7. Cancel subscription doesn't verify Stripe success
 
@@ -134,7 +134,7 @@ Initially flagged, but the client app's `WorkoutsService` imports from `level_up
 
 **Fix:** Check the returned subscription object's status before writing to Firestore.
 
-### 8. No error handling anywhere in client app screens
+### FIXED: 8. No error handling anywhere in client app screens
 
 **Files:**
 - `apps/level_up_client/lib/workout/workout_screen.dart:21-28`
@@ -144,7 +144,7 @@ Initially flagged, but the client app's `WorkoutsService` imports from `level_up
 
 **Problem:** Not a single `try-catch` around any Firestore call. Network errors, permission errors, and auth errors will crash the app with unhandled exceptions.
 
-**Fix:** Add try-catch with user-friendly error states (similar to how the web app's `SubscriptionService` handles errors).
+**Fix applied:** Added try-catch to all four screens with user-friendly error states showing retry buttons (workout_screen, workout_details_screen, exercise_details_screen) or snackbar (profile_screen).
 
 ### FIXED: 9. Sign-in screen never resets loading state on error
 
@@ -228,13 +228,13 @@ Initially flagged, but the client app's `WorkoutsService` imports from `level_up
 
 **Regression test:** `packages/level_up_shared/test/models/chat_message_test.dart` — documents the current fallthrough behavior.
 
-### 18. Unsafe index access for WorkoutCategory
+### FIXED: 18. Unsafe index access for WorkoutCategory
 
-**File:** `apps/level_up_coach/lib/workouts/screens/upsert_exercise_screen.dart:88`
+**File:** `apps/level_up_coach/lib/workouts/screens/workout_detail_screen.dart:76`
 
-**Problem:** `ExerciseType.values[workout.category]` crashes if `category` is out of bounds.
+**Problem:** `WorkoutCategory.values[workout.category]` crashes if `category` is out of bounds.
 
-**Fix:** Bounds check before indexing.
+**Fix applied:** Added bounds check before indexing; defaults to `WorkoutCategory.basketball` for out-of-range values. (Original `ExerciseType.values[workout.category]` in upsert_exercise_screen was already replaced with proper switch pattern in prior audit.)
 
 ### 19. Account screen error handler is empty
 
@@ -266,11 +266,11 @@ Initially flagged, but the client app's `WorkoutsService` imports from `level_up
 
 Workout description is shown in both `title` and first line of `subtitle`.
 
-### 23. Missing Scaffold in StreamBuilder error/loading states (coach app)
+### FIXED: 23. Missing Scaffold in StreamBuilder error/loading states (coach app)
 
 **File:** `apps/level_up_coach/lib/workouts/screens/workout_detail_screen.dart:87-92`
 
-Error and loading states return bare widgets without Scaffold — causes render errors.
+**Fix applied:** Wrapped error and loading states with `Scaffold` + `AppBar` so they render correctly as root route widgets.
 
 ### 24. Commented-out `setState` in WorkoutDetailsScreen
 

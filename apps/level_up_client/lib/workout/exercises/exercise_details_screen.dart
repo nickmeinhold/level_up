@@ -17,23 +17,34 @@ class ExerciseDetailsScreen extends StatefulWidget {
 }
 
 class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
-  late YoutubePlayerController _controller;
-  late final Exercise _exercise;
+  YoutubePlayerController? _controller;
+  Exercise? _exercise;
   bool _loadingExercise = true;
+  String? _error;
 
   Future<void> _retrieveExercise() async {
-    _exercise = await locate<WorkoutsService>().retrieveExercise(
-      widget.exerciseId,
-    );
+    try {
+      final exercise = await locate<WorkoutsService>().retrieveExercise(
+        widget.exerciseId,
+      );
 
-    if (mounted) {
-      setState(() {
-        _controller = YoutubePlayerController(
-          initialVideoId: _exercise.youtubeId ?? 'dQw4w9WgXcQ',
-          flags: const YoutubePlayerFlags(autoPlay: false, mute: false),
-        );
-        _loadingExercise = false;
-      });
+      if (mounted) {
+        setState(() {
+          _exercise = exercise;
+          _controller = YoutubePlayerController(
+            initialVideoId: exercise.youtubeId ?? 'dQw4w9WgXcQ',
+            flags: const YoutubePlayerFlags(autoPlay: false, mute: false),
+          );
+          _loadingExercise = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = 'Could not load exercise. Please check your connection.';
+          _loadingExercise = false;
+        });
+      }
     }
   }
 
@@ -46,7 +57,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
@@ -57,6 +68,31 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
       body:
           (_loadingExercise)
               ? Center(child: CircularProgressIndicator())
+              : (_error != null || _exercise == null)
+              ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text(
+                      _error ?? 'Something went wrong.',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _loadingExercise = true;
+                          _error = null;
+                        });
+                        _retrieveExercise();
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              )
               : SingleChildScrollView(
                 child: Column(
                   children: [
@@ -64,7 +100,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
                     LayoutBuilder(
                       builder: (context, constraints) {
                         return YoutubePlayer(
-                          controller: _controller,
+                          controller: _controller!,
                           showVideoProgressIndicator: true,
                           progressIndicatorColor: Colors.red,
                           progressColors: const ProgressBarColors(
@@ -89,7 +125,7 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
                               borderRadius: BorderRadius.circular(8.0),
                             ),
                             child: Text(
-                              _exercise.description,
+                              _exercise!.description,
                               style: TextStyle(fontSize: 16.0),
                             ),
                           ),
@@ -149,14 +185,14 @@ class _ExerciseDetailsScreenState extends State<ExerciseDetailsScreen> {
 
                           const SizedBox(height: 20.0),
 
-                          switch (_exercise) {
-                            TimedExercise() => TimedExerciseView(
-                              exercise: _exercise,
+                          switch (_exercise!) {
+                            final TimedExercise e => TimedExerciseView(
+                              exercise: e,
                             ),
-                            RepsExerciseWithWeight() =>
-                              RepsExerciseWithWeightsView(exercise: _exercise),
-                            RepsExercise() => RepsExerciseView(
-                              exercise: _exercise,
+                            final RepsExerciseWithWeight e =>
+                              RepsExerciseWithWeightsView(exercise: e),
+                            final RepsExercise e => RepsExerciseView(
+                              exercise: e,
                             ),
                           },
                         ],

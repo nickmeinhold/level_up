@@ -23,7 +23,9 @@ export const createCheckoutSession = onCall(
 
       const userId = request.auth.uid;
 
-      // 1. Create or retrieve Stripe customer (if user exists)
+      // 1. Create or retrieve Stripe customer.
+      // Use an idempotency key based on userId to prevent duplicate customers
+      // if concurrent requests arrive (e.g., user double-clicks checkout).
       const user = await admin.auth().getUser(userId);
       const customers = await stripe.customers.list({
         email: user.email,
@@ -35,7 +37,9 @@ export const createCheckoutSession = onCall(
         logger.log(`Customer with id ${customerId} has already been created.`);
       } else {
         const customer = await stripe.customers.create(
-          {email: user.email, metadata: {firebaseUID: userId}});
+          {email: user.email, metadata: {firebaseUID: userId}},
+          {idempotencyKey: `create-customer-${userId}`},
+        );
         customerId = customer.id;
         logger.log(`Created customer with id ${customerId}.`);
       }
