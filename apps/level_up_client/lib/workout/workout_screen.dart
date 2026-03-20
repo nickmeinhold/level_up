@@ -15,11 +15,16 @@ class _WorkoutScreenState extends State<WorkoutScreen>
   final PageController _pageController = PageController(viewportFraction: 0.8);
   int _currentPage = 0;
   late TabController _tabController;
-  late List<Workout> _workouts;
+  List<Workout> _workouts = [];
   bool _loadingWorkouts = true;
+  String? _error;
 
   Future<void> _retrieveWorkouts() async {
-    _workouts = await locate<WorkoutsService>().retrieveWorkouts();
+    try {
+      _workouts = await locate<WorkoutsService>().retrieveWorkouts();
+    } catch (e) {
+      _error = 'Could not load workouts. Please check your connection.';
+    }
     if (mounted) {
       setState(() {
         _loadingWorkouts = false;
@@ -57,6 +62,28 @@ class _WorkoutScreenState extends State<WorkoutScreen>
       body:
           (_loadingWorkouts)
               ? Center(child: CircularProgressIndicator())
+              : (_error != null)
+              ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text(_error!, textAlign: TextAlign.center),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _loadingWorkouts = true;
+                          _error = null;
+                        });
+                        _retrieveWorkouts();
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              )
               : Column(
                 children: [
                   Expanded(

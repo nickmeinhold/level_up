@@ -31,8 +31,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _retrieveUserDetails() async {
-    Client client = await locate<ClientProfileService>().retrieveClientUser();
-    _nameController.text = client.name;
+    try {
+      Client client = await locate<ClientProfileService>().retrieveClientUser();
+      _nameController.text = client.name;
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Could not load profile. Please try again later.'),
+          ),
+        );
+      }
+    }
   }
 
   @override

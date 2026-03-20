@@ -73,7 +73,10 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
       widget.workoutId,
     );
     _descriptionController.text = workout.description;
-    _selectedCategory = WorkoutCategory.values[workout.category];
+    _selectedCategory = (workout.category >= 0 &&
+            workout.category < WorkoutCategory.values.length)
+        ? WorkoutCategory.values[workout.category]
+        : WorkoutCategory.basketball;
   }
 
   @override
@@ -88,10 +91,16 @@ class _WorkoutDetailScreenState extends State<WorkoutDetailScreen> {
       stream: locate<WorkoutsService>().workoutStream(widget.workoutId),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Center(child: Text(snapshot.error.toString()));
+          return Scaffold(
+            appBar: AppBar(title: const Text('Workout')),
+            body: Center(child: Text(snapshot.error.toString())),
+          );
         }
         if (!snapshot.hasData) {
-          return CircularProgressIndicator();
+          return Scaffold(
+            appBar: AppBar(title: const Text('Workout')),
+            body: const Center(child: CircularProgressIndicator()),
+          );
         }
 
         Workout workout = snapshot.data!;

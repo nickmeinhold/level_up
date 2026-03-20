@@ -14,13 +14,18 @@ class WorkoutDetailsScreen extends StatefulWidget {
 
 class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
   int _currentStep = 0;
-  late Workout _workout;
+  Workout? _workout;
   bool _loadingWorkout = true;
+  String? _error;
 
   Future<void> _loadWorkout() async {
-    _workout = await locate<WorkoutsService>().retrieveWorkout(
-      widget.workoutId,
-    );
+    try {
+      _workout = await locate<WorkoutsService>().retrieveWorkout(
+        widget.workoutId,
+      );
+    } catch (e) {
+      _error = 'Could not load workout. Please check your connection.';
+    }
     if (mounted) {
       setState(() {
         _loadingWorkout = false;
@@ -41,6 +46,31 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
       body:
           (_loadingWorkout)
               ? Center(child: CircularProgressIndicator())
+              : (_error != null || _workout == null)
+              ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text(
+                      _error ?? 'Something went wrong.',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          _loadingWorkout = true;
+                          _error = null;
+                        });
+                        _loadWorkout();
+                      },
+                      child: const Text('Retry'),
+                    ),
+                  ],
+                ),
+              )
               : Column(
                 children: [
                   Expanded(
@@ -64,7 +94,7 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
                         ),
                         child: Image.network(
                           locate<WorkoutsService>().getWorkoutImageUrl(
-                            _workout.id,
+                            _workout!.id,
                           ),
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
@@ -100,7 +130,7 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: Text(_workout.description),
+                          child: Text(_workout!.description),
                         ),
                       ],
                     ),
@@ -108,7 +138,7 @@ class _WorkoutDetailsScreenState extends State<WorkoutDetailsScreen> {
                   // Bottom two-thirds: Stepper
                   FutureBuilder<List<Exercise>>(
                     future: locate<WorkoutsService>().retrieveExercises(
-                      _workout.exerciseIds,
+                      _workout!.exerciseIds,
                     ),
                     builder: (context, snapshot) {
                       if (snapshot.hasError) {
